@@ -130,10 +130,9 @@ All data is generated via Faker + PySpark. No external downloads needed.
 | 1 | `carbon-reporting` | "Calculate our Scope 2 emissions" |
 | 1 | `customer-communications` | "Generate rate change notices" |
 
-## Tested On
+## Tested & Verified
 
-- **Workspace**: e2-demo-west.cloud.databricks.com
 - **Data generation**: Ran successfully via serverless compute (144s)
-- **Module 1 bugs**: Verified -- `kwh_used` triggers `UNRESOLVED_COLUMN` error
+- **Module 1 bugs**: Verified -- `kwh_used` triggers `UNRESOLVED_COLUMN` error as expected
 - **Module 7 queries**: Verified -- `system.access.assistant_events` returns real data
 - **All analytics queries**: Verified -- SAIDI, revenue, demand response metrics work correctly

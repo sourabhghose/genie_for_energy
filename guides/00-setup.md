@@ -12,12 +12,12 @@ Before you begin, ensure you have:
 
 | Requirement | Details |
 |-------------|---------|
-| **Databricks workspace access** | You need access to `e2-demo-west.cloud.databricks.com` |
+| **Databricks workspace access** | You need access to a Databricks workspace with Unity Catalog enabled |
 | **Unity Catalog enabled** | The workspace must have Unity Catalog enabled (standard for most Databricks workspaces) |
 | **Genie Code enabled** | Genie Code must be turned on in your workspace (we'll do this in the next section) |
 | **Compute** | A cluster or SQL warehouse for running notebooks and queries |
 
-> **Step 1:** Log in to your Databricks workspace at `e2-demo-west.cloud.databricks.com`.  
+> **Step 1:** Log in to your Databricks workspace (URL provided by your facilitator).  
 > **What you'll see:** The Databricks home page or your workspace landing page.  
 > **Key concept:** You need workspace access with permissions to run notebooks and query Unity Catalog tables.
 
@@ -32,7 +32,6 @@ Genie Code is an AI assistant built into Databricks. It may be available as a pr
 > **What you'll see:** A list of preview features with toggles. Enable the Genie Code–related preview(s).  
 > **Key concept:** Previews give early access to new features. Genie Code Agent mode enables autonomous multi-step tasks.
 
-[Screenshot: Previews menu with Genie Code toggle]
 
 > **Alternative (Account-level):** If you're an account admin, you can enable previews for all workspaces: log in to the [account console](https://accounts.cloud.databricks.com/), click **Previews** in the sidebar, and use the toggles.
 
@@ -56,7 +55,6 @@ Genie Code uses AI models to generate and fix code. **Partner-powered AI** allow
 > **What you'll see:** Workspace settings with AI-related options.  
 > **Key concept:** Workspace admins can override account settings. If Partner-powered AI is off, Genie Code Agent mode will not be available.
 
-[Screenshot: Workspace Settings > Advanced > Partner-powered AI toggle]
 
 ---
 
@@ -67,7 +65,6 @@ Genie Code uses AI models to generate and fix code. **Partner-powered AI** allow
 > **What you'll see:** A folder containing notebooks including `00_generate_energy_data` and `01_energy_data_explorer`.  
 > **Key concept:** Workshop materials are stored in your workspace. You may need to clone or import them if they're shared.
 
-[Screenshot: Workspace browser showing workshop folder]
 
 ---
 
@@ -80,7 +77,6 @@ The workshop uses a synthetic energy dataset. You must generate it once before s
 > **What you'll see:** Progress output as each table is created. The notebook installs `faker`, creates the schema `main.sourabh_energy_workshop`, and populates 7 tables.  
 > **Key concept:** The notebook generates realistic synthetic data with intentional data quality issues for later exercises.
 
-[Screenshot: Data generation notebook running]
 
 > **Note:** The first cell installs `faker` and may restart the Python kernel. Re-run from the top if needed.
 
@@ -125,7 +121,6 @@ SELECT 'raw_demand_response', COUNT(*) FROM main.sourabh_energy_workshop.raw_dem
 > **What you'll see:** A chat-style interface with a text box at the bottom. In the header you'll see: **New thread** (start fresh), **Settings** (custom instructions), **History** (past conversations), and **Close**.  
 > **Key concept:** Genie Code is a context-aware assistant. It can see your notebook, tables, and code to provide relevant help.
 
-[Screenshot: Genie Code pane open with controls labeled]
 
 > **Step 7b:** Click **History** to view past chat threads. Click **Settings** to add custom instructions (optional for now).
 
@@ -144,7 +139,6 @@ Describe the tables in my energy schema. How many customers do we have?
 > **What you'll see:** Genie Code will describe the tables in `main.sourabh_energy_workshop` and answer the customer count (50,000). It may run a SQL query to get the count.  
 > **Key concept:** Genie Code uses Unity Catalog metadata and can execute queries to answer natural language questions.
 
-[Screenshot: Genie Code response with table descriptions and customer count]
 
 ---
 

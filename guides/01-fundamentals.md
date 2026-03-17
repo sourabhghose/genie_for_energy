@@ -17,7 +17,6 @@ This 60-minute hands-on guide walks you through every major Genie Code feature. 
 > **What you'll see:** A pane opens—typically docked at the bottom or on the right side.  
 > **Key concept:** Genie Code is available in notebooks, SQL editor, dashboards, and more. The pane is your main interface.
 
-[Screenshot: Genie Code pane open]
 
 ### Explore Controls
 
@@ -72,7 +71,6 @@ Slash commands are shortcuts for common prompts. Type `/` in the Genie Code prom
 > **What you'll see:** Genie Code explains what the code does—loading the customers table and displaying it.  
 > **Key concept:** `/explain` is great for understanding unfamiliar code. You can add "be concise" or "explain line-by-line" for different detail levels.
 
-[Screenshot: /explain response for a cell]
 
 ### /fix
 
@@ -81,7 +79,6 @@ Slash commands are shortcuts for common prompts. Type `/` in the Genie Code prom
 > **What you'll see:** Genie Code proposes a fix in a **diff view**—replace `kwh_used` with `kwh_consumed`. Click **Accept** to apply the change.  
 > **Key concept:** `/fix` or **Diagnose Error** analyzes the error and suggests a correction. You can Accept or Reject. Accepting does not auto-run the cell—review first!
 
-[Screenshot: /fix diff view with Accept/Reject]
 
 ### /doc
 
@@ -103,7 +100,6 @@ SELECT * FROM main.sourabh_energy_workshop.raw_meter_readings WHERE kwh_consumed
 > **What you'll see:** Genie Code suggests improvements—e.g., selecting only needed columns instead of `*`, adding partition hints if applicable, or filtering earlier.  
 > **Key concept:** `/optimize` improves SQL and Python for performance, readability, and best practices.
 
-[Screenshot: /optimize suggestions]
 
 ### /prettify
 
@@ -155,7 +151,6 @@ print(avg)
 > **What you'll see:** Genie Code analyzes the pip log and suggests a fix (e.g., upgrade/downgrade).  
 > **Key concept:** `/repairEnvironment` helps with library installation failures and environment conflicts.
 
-[Screenshot: Environment error with Genie Code repair icon]
 
 ---
 
@@ -174,7 +169,6 @@ Calculate the average daily kWh consumption per customer for the last quarter
 > **What you'll see:** Genie Code generates Python or SQL code that answers your request. You can accept the code into the cell or run it.  
 > **Key concept:** You can invoke Genie Code directly in a cell without opening the pane. Great for quick code generation.
 
-[Screenshot: Inline assistant prompt in cell]
 
 ### Autocomplete
 
@@ -213,7 +207,6 @@ df = spark.read.table("main.sourabh_energy_workshop.
 > **What you'll see:** Genie Code includes the table schema in its context and answers with the column list.  
 > **Key concept:** The `@` symbol lets you attach tables, notebooks, or other assets to your prompt. Genie Code uses this context for better answers.
 
-[Screenshot: @ reference in prompt]
 
 ### Add Context
 
@@ -235,7 +228,6 @@ Show me commercial customers in the Northeast region with solar panels
 > **What you'll see:** The Catalog Explorer filters or queries the table to show matching rows.  
 > **Key concept:** You can explore data in Catalog Explorer using natural language, not just SQL.
 
-[Screenshot: Catalog Explorer with natural language filter]
 
 ---
 
@@ -271,7 +263,6 @@ The `01_energy_data_explorer` notebook has **3 intentional bugs**. Your job is t
 > **What you'll see:** A bar chart or table showing average amount charged by customer type.  
 > **Key concept:** Once the data pipeline is correct, downstream visualizations work. Genie Code helps you get there faster.
 
-[Screenshot: Working visualization]
 
 ---
 
@@ -287,7 +278,6 @@ Show me only delinquent commercial customers with balance over $500
 > **What you'll see:** The table filters to show only rows matching that criteria.  
 > **Key concept:** You can filter displayed data without writing SQL—Genie Code translates your natural language into the filter logic.
 
-[Screenshot: Filter icon and natural language filter prompt]
 
 ---
 
