@@ -13,6 +13,9 @@ Marketing wants customer segments for targeted campaigns. Operations wants deman
 
 ## Data Context
 
+![Customer Sample Data](../images/04-customers-sample.png)
+*Sample data from `raw_customers` — 50,000 customers with account details, rate plans, and feature flags.*
+
 | Table | Key Columns |
 |-------|-------------|
 | `raw_customers` | account_id, customer_name, region, customer_type, rate_plan, signup_date, contract_end_date, has_solar, has_ev |

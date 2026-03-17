@@ -11,6 +11,9 @@
 - Tables: `raw_customers` (50K), `raw_billing` (600K), `raw_outages` (5K), `raw_equipment` (2K), `raw_meter_readings` (10.7M), `raw_weather` (1.8K), `raw_demand_response` (20K)
 - Genie Code pane available (Agent mode)
 
+![Data Model](../images/00-data-model.png)
+*Data model overview — your dashboard will draw from all 7 interconnected tables.*
+
 ---
 
 ## 4A: Dashboard Creation (20 min)

@@ -4,6 +4,9 @@
 **Tables:** raw_customers, raw_meter_readings, raw_billing, raw_outages, raw_weather, raw_equipment, raw_demand_response  
 **Skills location:** `/Users/{username}/.assistant/skills/`
 
+![Agent Skills](../images/05-skills-folder.png)
+*The 10 energy-specific Agent Skills organized in three tiers: Knowledge, AI Functions, and Creators.*
+
 ---
 
 ## 5A: Custom Instructions - User Level (15 min)

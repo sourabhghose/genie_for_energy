@@ -2,6 +2,8 @@
 
 A comprehensive, modular workshop for learning **Databricks Genie Code** by building an end-to-end energy analytics platform. Participants play the role of a data team at a retail energy provider, using Genie Code's AI assistant to build pipelines, models, dashboards, and monitoring -- all through natural language.
 
+![Data Model](images/00-data-model.png)
+
 ## Workshop Theme
 
 **SmartGrid Analytics Platform** -- Build analytics covering customer segmentation, demand forecasting, grid reliability, predictive maintenance, and sustainability reporting for a retail energy provider serving 50,000 customers across 5 US regions.
@@ -25,6 +27,7 @@ A comprehensive, modular workshop for learning **Databricks Genie Code** by buil
 ```
 genie_for_energy/
 ├── README.md                          # This file
+├── images/                            # Documentation images (data model, screenshots)
 ├── guides/                            # Step-by-step participant guides
 │   ├── 00-setup.md                    # Environment setup (15 min)
 │   ├── 01-fundamentals.md             # Genie Code feature tour (60 min)
@@ -99,6 +102,8 @@ Each module is independent and can be combined based on audience and time:
 
 All data is generated via Faker + PySpark. No external downloads needed.
 
+![Catalog Tables](images/03-catalog-tables.png)
+
 | Table | Rows | Key Features |
 |-------|------|-------------|
 | `raw_customers` | 50,000 | 5 regions, 3 customer types, 4 rate plans, solar/EV flags |
@@ -115,7 +120,14 @@ All data is generated via Faker + PySpark. No external downloads needed.
 - ~0.5% duplicate billing records
 - ~1% future-dated outage records
 
+## Genie Code in Action
+
+![Genie Code Pane](images/02-genie-code-pane.png)
+*The Genie Code pane alongside a notebook — showing a `/fix` conversation that identifies and corrects a wrong join column.*
+
 ## Agent Skills (10 Energy Skills)
+
+![Agent Skills](images/05-skills-folder.png)
 
 | Tier | Skill | Trigger Prompt |
 |------|-------|---------------|

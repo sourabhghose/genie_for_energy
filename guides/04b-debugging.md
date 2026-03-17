@@ -11,6 +11,9 @@
 - Access to a Lakeflow pipeline from Module 2 (or ability to create one)
 - Tables in `main.sourabh_energy_workshop`
 
+![Customer Schema](../images/04-customers-schema.png)
+*The `raw_customers` table schema — understanding column names is key to debugging join and filter errors.*
+
 ---
 
 ## Section A: Notebook Debugging (15 min)

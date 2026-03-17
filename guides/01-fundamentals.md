@@ -6,6 +6,9 @@ This 60-minute hands-on guide walks you through every major Genie Code feature. 
 
 **Prerequisites:** Complete [Module 0: Environment Setup](00-setup.md) first.
 
+![Genie Code Pane](../images/02-genie-code-pane.png)
+*The Genie Code pane in action — showing a `/fix` conversation that identifies and corrects a wrong join column.*
+
 ---
 
 ## Section 1A: Genie Code Pane & Navigation (10 min)
@@ -206,6 +209,9 @@ df = spark.read.table("main.sourabh_energy_workshop.
 
 > **What you'll see:** Genie Code includes the table schema in its context and answers with the column list.  
 > **Key concept:** The `@` symbol lets you attach tables, notebooks, or other assets to your prompt. Genie Code uses this context for better answers.
+
+![Meter Readings Sample](../images/07-meter-readings-sample.png)
+*Sample data from `raw_meter_readings` — the table has 10.7M hourly readings with kWh consumption, voltage, and power factor.*
 
 
 ### Add Context

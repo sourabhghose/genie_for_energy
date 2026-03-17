@@ -4,6 +4,9 @@
 
 Welcome! This guide walks you through setting up your environment for the Genie Code workshop. You'll configure your workspace, generate the energy dataset, and run your first Genie Code query. Plan for **~15 minutes**.
 
+![Data Model Overview](../images/00-data-model.png)
+*The SmartGrid Analytics Platform data model — 7 interconnected tables with 11.4M rows of real energy data.*
+
 ---
 
 ## Prerequisites
@@ -65,6 +68,9 @@ Genie Code uses AI models to generate and fix code. **Partner-powered AI** allow
 > **What you'll see:** A folder containing notebooks including `00_generate_energy_data` and `01_energy_data_explorer`.  
 > **Key concept:** Workshop materials are stored in your workspace. You may need to clone or import them if they're shared.
 
+![Workshop Folder](../images/01-workshop-folder.png)
+*Workshop notebooks in the Databricks workspace — 9 notebooks covering data generation through system table analysis.*
+
 
 ---
 
@@ -77,6 +83,8 @@ The workshop uses a synthetic energy dataset. You must generate it once before s
 > **What you'll see:** Progress output as each table is created. The notebook installs `faker`, creates the schema `main.sourabh_energy_workshop`, and populates 7 tables.  
 > **Key concept:** The notebook generates realistic synthetic data with intentional data quality issues for later exercises.
 
+![Data Generation Results](../images/06-data-generation-results.png)
+*Successful data generation output — 11.4M rows across 7 tables in `main.sourabh_energy_workshop`.*
 
 > **Note:** The first cell installs `faker` and may restart the Python kernel. Re-run from the top if needed.
 
@@ -112,6 +120,9 @@ SELECT 'raw_demand_response', COUNT(*) FROM main.sourabh_energy_workshop.raw_dem
 > **What you'll see:** Seven tables listed, with row counts approximately: 50K (customers), ~10.7M (meter readings), ~600K (billing), ~5K (outages), ~1.8K (weather), ~2K (equipment), ~20K (demand response).  
 > **Key concept:** Unity Catalog tables live in `catalog.schema.table`. Verifying counts ensures the workshop data is ready.
 
+![Catalog Tables](../images/03-catalog-tables.png)
+*All 7 energy tables in Unity Catalog — from 10.7M meter readings down to 1,825 weather records.*
+
 ---
 
 ## Open the Genie Code Pane
@@ -120,6 +131,9 @@ SELECT 'raw_demand_response', COUNT(*) FROM main.sourabh_energy_workshop.raw_dem
 > **Action:** Click the **Genie Code icon** in the **upper-right corner** of the page (the AI assistant icon). The Genie Code pane opens—usually docked at the bottom or on the right.  
 > **What you'll see:** A chat-style interface with a text box at the bottom. In the header you'll see: **New thread** (start fresh), **Settings** (custom instructions), **History** (past conversations), and **Close**.  
 > **Key concept:** Genie Code is a context-aware assistant. It can see your notebook, tables, and code to provide relevant help.
+
+![Genie Code Pane](../images/02-genie-code-pane.png)
+*The Genie Code pane (right) alongside a notebook — showing a `/fix` conversation that identifies a wrong join column.*
 
 
 > **Step 7b:** Click **History** to view past chat threads. Click **Settings** to add custom instructions (optional for now).

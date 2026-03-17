@@ -13,6 +13,9 @@ Our energy company ingests raw meter data, billing records, and weather data. We
 
 ## Data Context
 
+![Catalog Tables](../images/03-catalog-tables.png)
+*All 7 energy tables in Unity Catalog with real row counts.*
+
 | Table | Rows | Key Columns |
 |-------|------|-------------|
 | `raw_customers` | 50K | account_id, customer_name, region, customer_type, rate_plan, has_solar, has_ev |
