@@ -1,0 +1,118 @@
+{
+  "datasets": [
+    {
+      "name": "sustainability_summary",
+      "displayName": "Sustainability Summary",
+      "queryLines": [
+        "SELECT region, SUM(renewable_kwh) AS renewable_kwh, SUM(total_kwh) AS total_kwh, ",
+        "  ROUND(SUM(renewable_kwh) / NULLIF(SUM(total_kwh), 0) * 100, 2) AS pct_renewable ",
+        "FROM main.sourabh_energy_workshop.gold_sustainability_metrics ",
+        "WHERE metric_date >= date_sub(current_date(), 90) ",
+        "GROUP BY region"
+      ]
+    },
+    {
+      "name": "carbon_trend",
+      "displayName": "Carbon Trend",
+      "queryLines": [
+        "SELECT metric_date, region, carbon_tons_equiv ",
+        "FROM main.sourabh_energy_workshop.gold_sustainability_metrics ",
+        "WHERE metric_date >= date_sub(current_date(), 90)"
+      ]
+    }
+  ],
+  "pages": [
+    {
+      "name": "sustainability",
+      "displayName": "Sustainability Dashboard",
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layout": [
+        {
+          "widget": {
+            "name": "title",
+            "multilineTextboxSpec": {
+              "lines": ["## Sustainability Metrics"]
+            }
+          },
+          "position": {"x": 0, "y": 0, "width": 6, "height": 1}
+        },
+        {
+          "widget": {
+            "name": "total-renewable",
+            "queries": [{
+              "name": "main_query",
+              "query": {
+                "datasetName": "sustainability_summary",
+                "fields": [{"name": "sum(renewable_kwh)", "expression": "SUM(`renewable_kwh`)"}],
+                "disaggregated": false
+              }
+            }],
+            "spec": {
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {"fieldName": "sum(renewable_kwh)", "displayName": "Renewable kWh"}
+              },
+              "frame": {"showTitle": true, "title": "Renewable kWh (90d)"}
+            }
+          },
+          "position": {"x": 0, "y": 1, "width": 2, "height": 3}
+        },
+        {
+          "widget": {
+            "name": "pct-renewable",
+            "queries": [{
+              "name": "main_query",
+              "query": {
+                "datasetName": "sustainability_summary",
+                "fields": [{"name": "avg(pct_renewable)", "expression": "AVG(`pct_renewable`)"}],
+                "disaggregated": false
+              }
+            }],
+            "spec": {
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {"fieldName": "avg(pct_renewable)", "displayName": "% Renewable"}
+              },
+              "frame": {"showTitle": true, "title": "Avg % Renewable"}
+            }
+          },
+          "position": {"x": 2, "y": 1, "width": 2, "height": 3}
+        },
+        {
+          "widget": {
+            "name": "region-sustainability",
+            "queries": [{
+              "name": "main_query",
+              "query": {
+                "datasetName": "sustainability_summary",
+                "fields": [
+                  {"name": "region", "expression": "`region`"},
+                  {"name": "renewable_kwh", "expression": "`renewable_kwh`"},
+                  {"name": "total_kwh", "expression": "`total_kwh`"},
+                  {"name": "pct_renewable", "expression": "`pct_renewable`"}
+                ],
+                "disaggregated": true
+              }
+            }],
+            "spec": {
+              "version": 2,
+              "widgetType": "table",
+              "encodings": {
+                "columns": [
+                  {"fieldName": "region", "displayName": "Region"},
+                  {"fieldName": "renewable_kwh", "displayName": "Renewable kWh"},
+                  {"fieldName": "total_kwh", "displayName": "Total kWh"},
+                  {"fieldName": "pct_renewable", "displayName": "% Renewable"}
+                ]
+              },
+              "frame": {"showTitle": true, "title": "By Region"}
+            }
+          },
+          "position": {"x": 0, "y": 4, "width": 6, "height": 5}
+        }
+      ]
+    }
+  ]
+}

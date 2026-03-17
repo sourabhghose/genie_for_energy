@@ -1,0 +1,117 @@
+{
+  "datasets": [
+    {
+      "name": "ops_summary",
+      "displayName": "Ops Summary",
+      "queryLines": [
+        "SELECT region, COUNT(DISTINCT customer_id) AS customers, SUM(total_kwh) AS total_kwh, AVG(total_kwh) AS avg_kwh ",
+        "FROM main.sourabh_energy_workshop.gold_daily_consumption ",
+        "WHERE reading_date >= date_sub(current_date(), 30) ",
+        "GROUP BY region"
+      ]
+    },
+    {
+      "name": "daily_trend",
+      "displayName": "Daily Trend",
+      "queryLines": [
+        "SELECT reading_date, region, total_kwh ",
+        "FROM main.sourabh_energy_workshop.gold_daily_consumption ",
+        "WHERE reading_date >= date_sub(current_date(), 30)"
+      ]
+    }
+  ],
+  "pages": [
+    {
+      "name": "overview",
+      "displayName": "Energy Ops Center",
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layout": [
+        {
+          "widget": {
+            "name": "title",
+            "multilineTextboxSpec": {
+              "lines": ["## Energy Operations Center"]
+            }
+          },
+          "position": {"x": 0, "y": 0, "width": 6, "height": 1}
+        },
+        {
+          "widget": {
+            "name": "total-customers",
+            "queries": [{
+              "name": "main_query",
+              "query": {
+                "datasetName": "ops_summary",
+                "fields": [{"name": "sum(customers)", "expression": "SUM(`customers`)"}],
+                "disaggregated": false
+              }
+            }],
+            "spec": {
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {"fieldName": "sum(customers)", "displayName": "Total Customers"}
+              },
+              "frame": {"showTitle": true, "title": "Total Customers"}
+            }
+          },
+          "position": {"x": 0, "y": 1, "width": 2, "height": 3}
+        },
+        {
+          "widget": {
+            "name": "total-kwh",
+            "queries": [{
+              "name": "main_query",
+              "query": {
+                "datasetName": "ops_summary",
+                "fields": [{"name": "sum(total_kwh)", "expression": "SUM(`total_kwh`)"}],
+                "disaggregated": false
+              }
+            }],
+            "spec": {
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {"fieldName": "sum(total_kwh)", "displayName": "Total kWh"}
+              },
+              "frame": {"showTitle": true, "title": "Total kWh (30d)"}
+            }
+          },
+          "position": {"x": 2, "y": 1, "width": 2, "height": 3}
+        },
+        {
+          "widget": {
+            "name": "region-table",
+            "queries": [{
+              "name": "main_query",
+              "query": {
+                "datasetName": "ops_summary",
+                "fields": [
+                  {"name": "region", "expression": "`region`"},
+                  {"name": "customers", "expression": "`customers`"},
+                  {"name": "total_kwh", "expression": "`total_kwh`"},
+                  {"name": "avg_kwh", "expression": "`avg_kwh`"}
+                ],
+                "disaggregated": true
+              }
+            }],
+            "spec": {
+              "version": 2,
+              "widgetType": "table",
+              "encodings": {
+                "columns": [
+                  {"fieldName": "region", "displayName": "Region"},
+                  {"fieldName": "customers", "displayName": "Customers"},
+                  {"fieldName": "total_kwh", "displayName": "Total kWh"},
+                  {"fieldName": "avg_kwh", "displayName": "Avg kWh"}
+                ]
+              },
+              "frame": {"showTitle": true, "title": "By Region"}
+            }
+          },
+          "position": {"x": 0, "y": 4, "width": 6, "height": 5}
+        }
+      ]
+    }
+  ]
+}
