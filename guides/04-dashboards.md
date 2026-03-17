@@ -16,6 +16,10 @@
 
 ---
 
+> **Reference Dashboard:** A pre-built "SmartGrid Analytics Platform — Australia" dashboard is available in your workspace as a reference. It includes 3 pages (Executive Overview, Grid Reliability, Outage Map) with KPIs, bar/line/pie charts, a stacked bar, an equipment risk table, and an interactive point map. The screenshots in this guide are taken from this reference. Your goal in this module is to **build your own dashboard from scratch** using Genie Code prompts.
+
+---
+
 ## 4A: Dashboard Creation (20 min)
 
 ### Step 1: Create a New Dashboard
@@ -175,7 +179,7 @@ Add a map visualization showing outage locations across Australia. Use raw_outag
 **Expected result:** A map centred on Australia with markers for each outage, coloured by cause and sized by impact.
 
 ![Outage Map](../images/dashboard-outage-map.png)
-*Example: Outage Map page showing geospatial outage data across Australian states.*
+*Example: Point map with 5,000 outage locations colour-coded by cause and sized by affected meters count.*
 
 ### Prompt 14: Customer Density Map
 

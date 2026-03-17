@@ -129,7 +129,7 @@ All data is generated via Faker + PySpark. No external downloads needed.
 *Grid Reliability page — outage KPIs, stacked bar chart by cause and state, and high-risk equipment table.*
 
 ![Dashboard Outage Map](images/dashboard-outage-map.png)
-*Outage Map page — geospatial outage data with latitude/longitude coordinates for map visualizations.*
+*Outage Map page — interactive point map with 5,000 outage locations colour-coded by cause and sized by affected meters.*
 
 ## Genie Code in Action
 
