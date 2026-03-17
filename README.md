@@ -38,6 +38,9 @@ genie_for_energy/
 │   ├── 05-extending.md                # Skills, MCP, instructions (75 min)
 │   ├── 06-genai-observability.md       # MLflow + Genie Code (60 min)
 │   └── 07-measuring-impact.md         # System tables & ROI (30 min)
+├── dashboard/
+│   ├── smartgrid-analytics-platform.lvdash.json  # Exportable Lakeview dashboard
+│   └── README.md                      # Import instructions (API, DABs)
 ├── setup/
 │   └── generate_energy_data.py        # Faker + PySpark data generation notebook
 ├── modules/

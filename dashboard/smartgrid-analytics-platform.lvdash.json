@@ -1,0 +1,946 @@
+{
+  "datasets": [
+    {
+      "name": "kpi_summary",
+      "displayName": "KPI Summary",
+      "queryLines": [
+        "SELECT COUNT(*) as total_customers,   SUM(CASE WHEN has_solar THEN 1 ELSE 0 END) as solar_customers,   ROUND(SUM(CASE WHEN has_solar THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 1) as solar_pct,   SUM(CASE WHEN has_ev THEN 1 ELSE 0 END) as ev_customers FROM main.sourabh_energy_workshop.raw_customers "
+      ]
+    },
+    {
+      "name": "outage_kpi",
+      "displayName": "Outage KPI",
+      "queryLines": [
+        "SELECT COUNT(*) as total_outages,   ROUND(AVG(duration_minutes), 0) as avg_duration_min,   SUM(affected_meters_count) as total_affected FROM main.sourabh_energy_workshop.raw_outages "
+      ]
+    },
+    {
+      "name": "billing_kpi",
+      "displayName": "Billing KPI",
+      "queryLines": [
+        "SELECT ROUND(SUM(amount_charged), 0) as total_revenue,   ROUND(SUM(total_kwh)/1000, 0) as total_mwh FROM main.sourabh_energy_workshop.raw_billing "
+      ]
+    },
+    {
+      "name": "consumption_by_state",
+      "displayName": "Consumption by State",
+      "queryLines": [
+        "SELECT c.state,   ROUND(SUM(m.kwh_consumed)/1000, 0) as total_mwh,   COUNT(DISTINCT m.meter_id) as meters FROM main.sourabh_energy_workshop.raw_meter_readings m JOIN main.sourabh_energy_workshop.raw_customers c ON m.customer_id = c.account_id GROUP BY c.state ORDER BY total_mwh DESC "
+      ]
+    },
+    {
+      "name": "customer_type_breakdown",
+      "displayName": "Customer Type Breakdown",
+      "queryLines": [
+        "SELECT customer_type, state, COUNT(*) as customer_count FROM main.sourabh_energy_workshop.raw_customers GROUP BY customer_type, state "
+      ]
+    },
+    {
+      "name": "outage_by_cause",
+      "displayName": "Outages by Cause",
+      "queryLines": [
+        "SELECT cause, state, COUNT(*) as outage_count FROM main.sourabh_energy_workshop.raw_outages GROUP BY cause, state "
+      ]
+    },
+    {
+      "name": "monthly_revenue",
+      "displayName": "Monthly Revenue",
+      "queryLines": [
+        "SELECT billing_period,   ROUND(SUM(amount_charged), 0) as total_revenue,   ROUND(SUM(total_kwh)/1000, 0) as total_mwh FROM main.sourabh_energy_workshop.raw_billing GROUP BY billing_period ORDER BY billing_period "
+      ]
+    },
+    {
+      "name": "rate_plan_dist",
+      "displayName": "Rate Plan Distribution",
+      "queryLines": [
+        "SELECT rate_plan, COUNT(*) as customer_count FROM main.sourabh_energy_workshop.raw_customers GROUP BY rate_plan ORDER BY customer_count DESC "
+      ]
+    },
+    {
+      "name": "equipment_risk",
+      "displayName": "Equipment at Risk",
+      "queryLines": [
+        "SELECT equipment_id, equipment_type, state,   ROUND(current_load_pct, 1) as load_pct,   failure_count, install_date FROM main.sourabh_energy_workshop.raw_equipment WHERE current_load_pct > 85 ORDER BY current_load_pct DESC LIMIT 15 "
+      ]
+    },
+    {
+      "name": "outage_locations",
+      "displayName": "Outage Locations",
+      "queryLines": [
+        "SELECT latitude, longitude, cause,   affected_meters_count, state, duration_minutes FROM main.sourabh_energy_workshop.raw_outages WHERE latitude IS NOT NULL AND longitude IS NOT NULL "
+      ]
+    }
+  ],
+  "pages": [
+    {
+      "name": "overview",
+      "displayName": "Executive Overview",
+      "layout": [
+        {
+          "widget": {
+            "name": "title",
+            "multilineTextboxSpec": {
+              "lines": [
+                "## SmartGrid Analytics Platform"
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 6,
+            "height": 1
+          }
+        },
+        {
+          "widget": {
+            "name": "subtitle",
+            "multilineTextboxSpec": {
+              "lines": [
+                "Australian Energy Operations Dashboard \u2014 6 States | 50,000 Customers | Real-time Grid Analytics"
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 1,
+            "width": 6,
+            "height": 1
+          }
+        },
+        {
+          "widget": {
+            "name": "kpi-total-customers",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "kpi_summary",
+                  "fields": [
+                    {
+                      "name": "total_customers",
+                      "expression": "`total_customers`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "total_customers",
+                  "displayName": "Total Customers"
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Total Customers"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 2,
+            "width": 2,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "kpi-total-mwh",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "billing_kpi",
+                  "fields": [
+                    {
+                      "name": "total_mwh",
+                      "expression": "`total_mwh`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "total_mwh",
+                  "displayName": "Total MWh Billed"
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Total MWh Billed"
+              }
+            }
+          },
+          "position": {
+            "x": 2,
+            "y": 2,
+            "width": 2,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "kpi-solar-pct",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "kpi_summary",
+                  "fields": [
+                    {
+                      "name": "solar_pct",
+                      "expression": "`solar_pct`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "solar_pct",
+                  "displayName": "Solar Adoption %"
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Solar Adoption %"
+              }
+            }
+          },
+          "position": {
+            "x": 4,
+            "y": 2,
+            "width": 2,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "section-consumption",
+            "multilineTextboxSpec": {
+              "lines": [
+                "### Energy Consumption & Revenue"
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 5,
+            "width": 6,
+            "height": 1
+          }
+        },
+        {
+          "widget": {
+            "name": "consumption-by-state",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "consumption_by_state",
+                  "fields": [
+                    {
+                      "name": "state",
+                      "expression": "`state`"
+                    },
+                    {
+                      "name": "total_mwh",
+                      "expression": "`total_mwh`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "state",
+                  "scale": {
+                    "type": "categorical"
+                  },
+                  "displayName": "State"
+                },
+                "y": {
+                  "fieldName": "total_mwh",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "Total MWh"
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Energy Consumption by State (MWh)"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 6,
+            "width": 3,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "monthly-revenue-trend",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "monthly_revenue",
+                  "fields": [
+                    {
+                      "name": "billing_period",
+                      "expression": "`billing_period`"
+                    },
+                    {
+                      "name": "total_revenue",
+                      "expression": "`total_revenue`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "line",
+              "encodings": {
+                "x": {
+                  "fieldName": "billing_period",
+                  "scale": {
+                    "type": "categorical"
+                  },
+                  "displayName": "Billing Period"
+                },
+                "y": {
+                  "fieldName": "total_revenue",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "Revenue (AUD)"
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Monthly Revenue Trend (AUD)"
+              }
+            }
+          },
+          "position": {
+            "x": 3,
+            "y": 6,
+            "width": 3,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "customer-type-pie",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "customer_type_breakdown",
+                  "fields": [
+                    {
+                      "name": "customer_type",
+                      "expression": "`customer_type`"
+                    },
+                    {
+                      "name": "sum(customer_count)",
+                      "expression": "SUM(`customer_count`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "pie",
+              "encodings": {
+                "angle": {
+                  "fieldName": "sum(customer_count)",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "Customers"
+                },
+                "color": {
+                  "fieldName": "customer_type",
+                  "scale": {
+                    "type": "categorical"
+                  },
+                  "displayName": "Customer Type"
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Customer Type Distribution"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 12,
+            "width": 3,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "rate-plan-pie",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "rate_plan_dist",
+                  "fields": [
+                    {
+                      "name": "rate_plan",
+                      "expression": "`rate_plan`"
+                    },
+                    {
+                      "name": "customer_count",
+                      "expression": "`customer_count`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "pie",
+              "encodings": {
+                "angle": {
+                  "fieldName": "customer_count",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "Customers"
+                },
+                "color": {
+                  "fieldName": "rate_plan",
+                  "scale": {
+                    "type": "categorical"
+                  },
+                  "displayName": "Rate Plan"
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Rate Plan Distribution"
+              }
+            }
+          },
+          "position": {
+            "x": 3,
+            "y": 12,
+            "width": 3,
+            "height": 6
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS"
+    },
+    {
+      "name": "reliability",
+      "displayName": "Grid Reliability",
+      "layout": [
+        {
+          "widget": {
+            "name": "rel-title",
+            "multilineTextboxSpec": {
+              "lines": [
+                "## Grid Reliability & Outage Analysis"
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 6,
+            "height": 1
+          }
+        },
+        {
+          "widget": {
+            "name": "rel-subtitle",
+            "multilineTextboxSpec": {
+              "lines": [
+                "Outage tracking, cause analysis, and equipment risk across Australian states"
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 1,
+            "width": 6,
+            "height": 1
+          }
+        },
+        {
+          "widget": {
+            "name": "kpi-total-outages",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "outage_kpi",
+                  "fields": [
+                    {
+                      "name": "total_outages",
+                      "expression": "`total_outages`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "total_outages",
+                  "displayName": "Total Outages"
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Total Outages"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 2,
+            "width": 2,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "kpi-avg-duration",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "outage_kpi",
+                  "fields": [
+                    {
+                      "name": "avg_duration_min",
+                      "expression": "`avg_duration_min`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "avg_duration_min",
+                  "displayName": "Avg Duration (min)"
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Avg Outage Duration (min)"
+              }
+            }
+          },
+          "position": {
+            "x": 2,
+            "y": 2,
+            "width": 2,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "kpi-total-affected",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "outage_kpi",
+                  "fields": [
+                    {
+                      "name": "total_affected",
+                      "expression": "`total_affected`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "total_affected",
+                  "displayName": "Total Meters Affected"
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Total Meters Affected"
+              }
+            }
+          },
+          "position": {
+            "x": 4,
+            "y": 2,
+            "width": 2,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "outage-by-cause-stacked",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "outage_by_cause",
+                  "fields": [
+                    {
+                      "name": "cause",
+                      "expression": "`cause`"
+                    },
+                    {
+                      "name": "state",
+                      "expression": "`state`"
+                    },
+                    {
+                      "name": "sum(outage_count)",
+                      "expression": "SUM(`outage_count`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "cause",
+                  "scale": {
+                    "type": "categorical"
+                  },
+                  "displayName": "Cause"
+                },
+                "y": {
+                  "fieldName": "sum(outage_count)",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "Outage Count"
+                },
+                "color": {
+                  "fieldName": "state",
+                  "scale": {
+                    "type": "categorical"
+                  },
+                  "displayName": "State"
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Outages by Cause (Stacked by State)"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 5,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "section-equipment",
+            "multilineTextboxSpec": {
+              "lines": [
+                "### High-Risk Equipment (Load > 85%)"
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 11,
+            "width": 6,
+            "height": 1
+          }
+        },
+        {
+          "widget": {
+            "name": "equipment-risk-table",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "equipment_risk",
+                  "fields": [
+                    {
+                      "name": "equipment_id",
+                      "expression": "`equipment_id`"
+                    },
+                    {
+                      "name": "equipment_type",
+                      "expression": "`equipment_type`"
+                    },
+                    {
+                      "name": "state",
+                      "expression": "`state`"
+                    },
+                    {
+                      "name": "load_pct",
+                      "expression": "`load_pct`"
+                    },
+                    {
+                      "name": "failure_count",
+                      "expression": "`failure_count`"
+                    },
+                    {
+                      "name": "install_date",
+                      "expression": "`install_date`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "table",
+              "encodings": {
+                "columns": [
+                  {
+                    "fieldName": "equipment_id",
+                    "displayName": "Equipment ID"
+                  },
+                  {
+                    "fieldName": "equipment_type",
+                    "displayName": "Type"
+                  },
+                  {
+                    "fieldName": "state",
+                    "displayName": "State"
+                  },
+                  {
+                    "fieldName": "load_pct",
+                    "displayName": "Load %"
+                  },
+                  {
+                    "fieldName": "failure_count",
+                    "displayName": "Failures"
+                  },
+                  {
+                    "fieldName": "install_date",
+                    "displayName": "Install Date"
+                  }
+                ]
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Equipment at Risk"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 12,
+            "width": 6,
+            "height": 7
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS"
+    },
+    {
+      "name": "outage-map",
+      "displayName": "Outage Map",
+      "layout": [
+        {
+          "widget": {
+            "name": "map-title",
+            "multilineTextboxSpec": {
+              "lines": [
+                "## Outage Location Map"
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 6,
+            "height": 1
+          }
+        },
+        {
+          "widget": {
+            "name": "map-subtitle",
+            "multilineTextboxSpec": {
+              "lines": [
+                "Geographic distribution of outages across Australia \u2014 colour-coded by cause"
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 1,
+            "width": 6,
+            "height": 1
+          }
+        },
+        {
+          "widget": {
+            "name": "outage-locations-table",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "outage_locations",
+                  "fields": [
+                    {
+                      "name": "cause",
+                      "expression": "`cause`"
+                    },
+                    {
+                      "name": "latitude",
+                      "expression": "`latitude`"
+                    },
+                    {
+                      "name": "longitude",
+                      "expression": "`longitude`"
+                    },
+                    {
+                      "name": "affected_meters_count",
+                      "expression": "`affected_meters_count`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Outage Locations \u2014 Geospatial Data"
+              },
+              "widgetType": "symbol-map",
+              "encodings": {
+                "coordinates": {
+                  "latitude": {
+                    "fieldName": "latitude"
+                  },
+                  "longitude": {
+                    "fieldName": "longitude"
+                  }
+                },
+                "color": {
+                  "fieldName": "cause",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "size": {
+                  "fieldName": "affected_meters_count",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 2,
+            "width": 6,
+            "height": 10
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS"
+    },
+    {
+      "name": "filters",
+      "displayName": "Filters",
+      "layout": [
+        {
+          "widget": {
+            "name": "filter-state",
+            "queries": [
+              {
+                "name": "ds_customer_state",
+                "query": {
+                  "datasetName": "customer_type_breakdown",
+                  "fields": [
+                    {
+                      "name": "state",
+                      "expression": "`state`"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "filter-multi-select",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "state",
+                    "displayName": "State",
+                    "queryName": "ds_customer_state"
+                  }
+                ]
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "State"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 2,
+            "height": 2
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_GLOBAL_FILTERS"
+    }
+  ]
+}
