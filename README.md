@@ -142,6 +142,10 @@ All data is generated via Faker + PySpark. No external downloads needed.
 | 1 | `carbon-reporting` | "Calculate our Scope 2 emissions" |
 | 1 | `customer-communications` | "Generate rate change notices" |
 
+## Next Step
+
+**Ready to get started?** Head to the **[Environment Setup Guide](guides/00-setup.md)** to configure your workspace, generate the energy dataset, and run your first Genie Code query.
+
 ## Tested & Verified
 
 - **Data generation**: Ran successfully via serverless compute (144s)
