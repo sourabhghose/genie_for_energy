@@ -120,6 +120,17 @@ All data is generated via Faker + PySpark. No external downloads needed.
 - ~0.5% duplicate billing records
 - ~1% future-dated outage records
 
+## Dashboard Preview
+
+![Dashboard Overview](images/dashboard-overview.png)
+*Executive Overview page — KPIs, consumption by state, and monthly revenue trend across 6 Australian states.*
+
+![Dashboard Reliability](images/dashboard-reliability.png)
+*Grid Reliability page — outage KPIs, stacked bar chart by cause and state, and high-risk equipment table.*
+
+![Dashboard Outage Map](images/dashboard-outage-map.png)
+*Outage Map page — geospatial outage data with latitude/longitude coordinates for map visualizations.*
+
 ## Genie Code in Action
 
 ![Genie Code Pane](images/02-genie-code-pane.png)

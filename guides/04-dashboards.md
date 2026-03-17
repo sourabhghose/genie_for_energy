@@ -53,6 +53,9 @@ Build an energy operations dashboard using these tables from main.sourabh_energy
 
 **Expected result:** A dashboard with 5+ visualizations and 3 filters. Revenue/consumption trends as a line chart, state comparison as a bar chart, customer type as a pie chart, outage cause as a stacked bar, and an equipment table.
 
+![Dashboard Overview](../images/dashboard-overview.png)
+*Example: Executive Overview page with KPIs, consumption bar chart, and revenue trend line chart.*
+
 ---
 
 ## 4B: Custom Calculations (15 min)
@@ -72,6 +75,9 @@ Add a rolling 7-day average consumption trend using a window function, and show 
 ```
 
 **Expected result:** A line chart with a 7-day rolling average, and a chart or table showing state consumption as % of total.
+
+![Dashboard Reliability](../images/dashboard-reliability.png)
+*Example: Grid Reliability page with outage KPIs, stacked bar chart by cause, and equipment risk table.*
 
 **Key concepts – 4 types of custom calculations:**
 
@@ -167,6 +173,9 @@ Add a map visualization showing outage locations across Australia. Use raw_outag
 ```
 
 **Expected result:** A map centred on Australia with markers for each outage, coloured by cause and sized by impact.
+
+![Outage Map](../images/dashboard-outage-map.png)
+*Example: Outage Map page showing geospatial outage data across Australian states.*
 
 ### Prompt 14: Customer Density Map
 
