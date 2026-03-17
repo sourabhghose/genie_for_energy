@@ -144,7 +144,7 @@ schema_cust = StructType([
 print("Generating 50K customers...")
 df_cust = spark.createDataFrame(gen_customers(), schema=schema_cust)
 df_cust = df_cust.withColumn("signup_date", F.col("signup_date").cast("date")).withColumn("contract_end_date", F.col("contract_end_date").cast("date"))
-df_cust.write.mode("overwrite").saveAsTable("raw_customers")
+df_cust.write.mode("overwrite").option("overwriteSchema", "true").saveAsTable("raw_customers")
 print(f"  raw_customers: {spark.table('raw_customers').count():,} rows")
 
 # COMMAND ----------
@@ -224,7 +224,7 @@ is_peak = (F.col("hour").between(14, 20)) & (F.col("day_of_week").between(2, 6))
 df_meters = df_meters.withColumn("is_peak_hour", is_peak)
 
 df_meters = df_meters.select("meter_id", "customer_id", "timestamp", "kwh_consumed", "voltage", "power_factor", "is_peak_hour")
-df_meters.write.mode("overwrite").saveAsTable("raw_meter_readings")
+df_meters.write.mode("overwrite").option("overwriteSchema", "true").saveAsTable("raw_meter_readings")
 cnt = spark.table("raw_meter_readings").count()
 print(f"  raw_meter_readings: {cnt:,} rows")
 
@@ -277,7 +277,7 @@ schema_bill = StructType([
 
 df_bill = spark.createDataFrame(billing_rows, schema=schema_bill)
 df_bill = df_bill.withColumn("payment_date", F.col("payment_date").cast("date"))
-df_bill.write.mode("overwrite").saveAsTable("raw_billing")
+df_bill.write.mode("overwrite").option("overwriteSchema", "true").saveAsTable("raw_billing")
 print(f"  raw_billing: {spark.table('raw_billing').count():,} rows")
 
 # COMMAND ----------
@@ -325,7 +325,7 @@ schema_out = StructType([
 ])
 df_out = spark.createDataFrame(outage_rows, schema=schema_out)
 df_out = df_out.withColumn("start_time", F.col("start_time").cast("timestamp")).withColumn("end_time", F.col("end_time").cast("timestamp"))
-df_out.write.mode("overwrite").saveAsTable("raw_outages")
+df_out.write.mode("overwrite").option("overwriteSchema", "true").saveAsTable("raw_outages")
 print(f"  raw_outages: {spark.table('raw_outages').count():,} rows")
 
 # COMMAND ----------
@@ -372,7 +372,7 @@ schema_w = StructType([
     StructField("is_extreme_cold", BooleanType()),
 ])
 df_w = spark.createDataFrame(weather_rows, schema=schema_w).withColumn("date", F.col("date").cast("date"))
-df_w.write.mode("overwrite").saveAsTable("raw_weather")
+df_w.write.mode("overwrite").option("overwriteSchema", "true").saveAsTable("raw_weather")
 print(f"  raw_weather: {spark.table('raw_weather').count():,} rows")
 
 # COMMAND ----------
@@ -415,7 +415,7 @@ schema_eq = StructType([
 ])
 df_eq = spark.createDataFrame(eq_rows, schema=schema_eq)
 df_eq = df_eq.withColumn("install_date", F.col("install_date").cast("date")).withColumn("last_maintenance_date", F.col("last_maintenance_date").cast("date"))
-df_eq.write.mode("overwrite").saveAsTable("raw_equipment")
+df_eq.write.mode("overwrite").option("overwriteSchema", "true").saveAsTable("raw_equipment")
 print(f"  raw_equipment: {spark.table('raw_equipment').count():,} rows")
 
 # COMMAND ----------
@@ -445,7 +445,7 @@ schema_dr = StructType([
     StructField("incentive_paid", DoubleType()), StructField("participated", BooleanType()),
 ])
 df_dr = spark.createDataFrame(dr_rows, schema=schema_dr).withColumn("event_date", F.col("event_date").cast("date"))
-df_dr.write.mode("overwrite").saveAsTable("raw_demand_response")
+df_dr.write.mode("overwrite").option("overwriteSchema", "true").saveAsTable("raw_demand_response")
 print(f"  raw_demand_response: {spark.table('raw_demand_response').count():,} rows")
 
 # COMMAND ----------
