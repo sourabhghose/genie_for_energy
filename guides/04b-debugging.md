@@ -66,7 +66,7 @@ This aggregation is very slow. How can I optimize it?
 
 **Expected result:** Genie Code suggests partition filters, date range limits, pre-aggregation, or sampling.
 
-**Key concept:** Always filter large tables (e.g., by date, region) before aggregating.
+**Key concept:** Always filter large tables (e.g., by date, state) before aggregating.
 
 ---
 
@@ -124,10 +124,10 @@ Paste SQL that has:
 Example:
 
 ```sql
-SELECT c.region, SUM(b.amount_charged) as revenue
+SELECT c.state, SUM(b.amount_charged) as revenue
 FROM main.sourabh_energy_workshop.raw_customers cust
 JOIN main.sourabh_energy_workshop.raw_billing b ON cust.account_id = b.customer_id
-GROUP BY c.region;
+GROUP BY c.state;
 ```
 
 **Ask Genie Code:**

@@ -1,6 +1,6 @@
 # Energy Data Dictionary
 
-Column descriptions for tables in `main.sourabh_energy_workshop`. Schema supports a retail energy provider with ~50K customers across 5 regions (Northeast, Southeast, Midwest, Southwest, Northwest).
+Column descriptions for tables in `main.sourabh_energy_workshop`. Schema supports a retail energy provider with ~50K customers across 6 Australian states (NSW, VIC, QLD, SA, WA, TAS). Coordinates (latitude/longitude) are available where applicable.
 
 ---
 
@@ -8,16 +8,21 @@ Column descriptions for tables in `main.sourabh_energy_workshop`. Schema support
 
 | Column | Type | Description |
 |--------|------|-------------|
-| customer_id | STRING | Unique customer identifier |
-| region | STRING | One of: Northeast, Southeast, Midwest, Southwest, Northwest |
+| account_id | STRING | Unique customer identifier |
+| customer_name | STRING | Customer name |
+| street_address | STRING | Street address |
+| city | STRING | City |
+| state | STRING | One of: NSW, VIC, QLD, SA, WA, TAS |
+| postcode | STRING | Australian postcode |
 | customer_type | STRING | residential, commercial, industrial |
-| service_address | STRING | Physical service location |
-| meter_id | STRING | Associated meter identifier |
-| rate_class | STRING | Rate tariff class (e.g., R1, C1, I1) |
-| enrollment_date | DATE | Customer enrollment/start date |
-| churn_rate | DOUBLE | Annual churn probability (0–1) |
-| created_at | TIMESTAMP | Record creation timestamp |
-| updated_at | TIMESTAMP | Last update timestamp |
+| rate_plan | STRING | flat, time_of_use, demand, solar_feed_in |
+| signup_date | DATE | Customer signup/start date |
+| contract_end_date | DATE | Contract end date |
+| has_solar | BOOLEAN | Whether customer has solar |
+| has_ev | BOOLEAN | Whether customer has EV |
+| demand_response_enrolled | BOOLEAN | Enrolled in demand response |
+| latitude | DOUBLE | Latitude coordinate |
+| longitude | DOUBLE | Longitude coordinate |
 
 ---
 
@@ -25,16 +30,13 @@ Column descriptions for tables in `main.sourabh_energy_workshop`. Schema support
 
 | Column | Type | Description |
 |--------|------|-------------|
-| reading_id | STRING | Unique reading identifier |
-| customer_id | STRING | References raw_customers.customer_id |
 | meter_id | STRING | Meter identifier |
-| reading_date | DATE | Date of reading |
-| reading_time | STRING | Time of reading (HH:mm) |
-| kwh | DOUBLE | Kilowatt-hours consumed |
-| demand_kw | DOUBLE | Peak demand in kW (if applicable) |
+| customer_id | STRING | References raw_customers.account_id |
+| timestamp | TIMESTAMP | Reading timestamp |
+| kwh_consumed | DOUBLE | Kilowatt-hours consumed |
+| voltage | DOUBLE | Voltage (230V nominal) |
 | power_factor | DOUBLE | Power factor (0–1) |
-| source | STRING | manual, ami, estimated |
-| created_at | TIMESTAMP | Record creation timestamp |
+| is_peak_hour | BOOLEAN | Whether reading is during peak hours |
 
 ---
 
@@ -42,18 +44,17 @@ Column descriptions for tables in `main.sourabh_energy_workshop`. Schema support
 
 | Column | Type | Description |
 |--------|------|-------------|
-| billing_id | STRING | Unique billing record identifier |
-| customer_id | STRING | References raw_customers.customer_id |
-| billing_period_start | DATE | Billing period start date |
-| billing_period_end | DATE | Billing period end date |
-| delivered_kwh | DOUBLE | Total kWh delivered to customer |
-| billed_kwh | DOUBLE | Total kWh billed (may differ due to losses, adjustments) |
-| total_amount | DOUBLE | Total bill amount in currency |
-| demand_charge | DOUBLE | Demand charge component |
-| energy_charge | DOUBLE | Energy charge component |
-| taxes_fees | DOUBLE | Taxes and fees |
-| status | STRING | pending, paid, overdue, disputed |
-| created_at | TIMESTAMP | Record creation timestamp |
+| bill_id | STRING | Unique billing record identifier |
+| customer_id | STRING | References raw_customers.account_id |
+| billing_period | STRING | Billing period |
+| total_kwh | DOUBLE | Total kWh consumed |
+| peak_kwh | DOUBLE | Peak period kWh |
+| off_peak_kwh | DOUBLE | Off-peak period kWh |
+| amount_charged | DOUBLE | Amount charged (AUD) |
+| amount_paid | DOUBLE | Amount paid (AUD) |
+| payment_date | DATE | Payment date |
+| balance | DOUBLE | Outstanding balance |
+| is_delinquent | BOOLEAN | Whether account is delinquent |
 
 ---
 
@@ -62,15 +63,15 @@ Column descriptions for tables in `main.sourabh_energy_workshop`. Schema support
 | Column | Type | Description |
 |--------|------|-------------|
 | outage_id | STRING | Unique outage identifier |
-| customer_id | STRING | References raw_customers.customer_id |
-| outage_start | TIMESTAMP | Outage start time |
-| outage_end | TIMESTAMP | Outage end time |
-| customer_minutes_interrupted | INT | Customer-minutes of interruption |
-| outage_type | STRING | unplanned, planned, maintenance |
-| cause_code | STRING | Root cause classification |
-| equipment_id | STRING | Related equipment (if applicable) |
-| region | STRING | Region (denormalized for analytics) |
-| created_at | TIMESTAMP | Record creation timestamp |
+| state | STRING | Australian state (NSW, VIC, QLD, SA, WA, TAS) |
+| start_time | TIMESTAMP | Outage start time |
+| end_time | TIMESTAMP | Outage end time |
+| duration_minutes | INT | Duration in minutes |
+| cause | STRING | Root cause classification |
+| affected_meters_count | INT | Number of affected meters |
+| restoration_priority | STRING | Restoration priority |
+| latitude | DOUBLE | Latitude coordinate |
+| longitude | DOUBLE | Longitude coordinate |
 
 ---
 
@@ -78,17 +79,15 @@ Column descriptions for tables in `main.sourabh_energy_workshop`. Schema support
 
 | Column | Type | Description |
 |--------|------|-------------|
-| weather_id | STRING | Unique weather record identifier |
-| region | STRING | Geographic region |
-| observation_date | DATE | Date of observation |
-| avg_temp_f | DOUBLE | Average temperature (Fahrenheit) |
-| max_temp_f | DOUBLE | Maximum temperature (Fahrenheit) |
-| min_temp_f | DOUBLE | Minimum temperature (Fahrenheit) |
-| precipitation_in | DOUBLE | Precipitation in inches |
-| humidity_pct | DOUBLE | Relative humidity (0–100) |
-| cooling_degree_days | INT | Cooling degree days |
-| heating_degree_days | INT | Heating degree days |
-| created_at | TIMESTAMP | Record creation timestamp |
+| date | DATE | Observation date |
+| state | STRING | Australian state |
+| temp_high_c | DOUBLE | Maximum temperature (Celsius) |
+| temp_low_c | DOUBLE | Minimum temperature (Celsius) |
+| humidity | DOUBLE | Relative humidity |
+| wind_speed_kmh | DOUBLE | Wind speed (km/h) |
+| precipitation_mm | DOUBLE | Precipitation (mm) |
+| is_extreme_heat | BOOLEAN | >38°C |
+| is_extreme_cold | BOOLEAN | <2°C |
 
 ---
 
@@ -98,14 +97,15 @@ Column descriptions for tables in `main.sourabh_energy_workshop`. Schema support
 |--------|------|-------------|
 | equipment_id | STRING | Unique equipment identifier |
 | equipment_type | STRING | transformer, switchgear, meter, etc. |
-| region | STRING | Geographic region |
-| installation_date | DATE | Installation date |
-| last_inspection_date | DATE | Last inspection date |
-| condition_score | STRING | good, fair, poor, critical |
-| capacity_kva | DOUBLE | Rated capacity in kVA |
-| age_years | INT | Age in years |
-| created_at | TIMESTAMP | Record creation timestamp |
-| updated_at | TIMESTAMP | Last update timestamp |
+| state | STRING | Australian state |
+| install_date | DATE | Installation date |
+| last_maintenance_date | DATE | Last maintenance date |
+| maintenance_count | INT | Number of maintenance events |
+| failure_count | INT | Number of failures |
+| capacity_rating | INT | Rated capacity |
+| current_load_pct | DOUBLE | Current load percentage |
+| latitude | DOUBLE | Latitude coordinate |
+| longitude | DOUBLE | Longitude coordinate |
 
 ---
 
@@ -113,13 +113,11 @@ Column descriptions for tables in `main.sourabh_energy_workshop`. Schema support
 
 | Column | Type | Description |
 |--------|------|-------------|
-| dr_event_id | STRING | Unique demand response event identifier |
-| event_id | STRING | Event grouping identifier |
-| customer_id | STRING | References raw_customers.customer_id |
-| event_start | TIMESTAMP | Event start time |
-| event_end | TIMESTAMP | Event end time |
-| baseline_kwh | DOUBLE | Baseline consumption (kWh) |
-| actual_kwh | DOUBLE | Actual consumption during event (kWh) |
-| event_status | STRING | scheduled, completed, cancelled, no_show |
-| incentive_amount | DOUBLE | Incentive paid (if applicable) |
-| created_at | TIMESTAMP | Record creation timestamp |
+| event_id | STRING | Unique demand response event identifier |
+| customer_id | STRING | References raw_customers.account_id |
+| event_date | DATE | Event date |
+| event_type | STRING | curtailment, shift, shed |
+| target_reduction_kwh | DOUBLE | Target reduction (kWh) |
+| actual_reduction_kwh | DOUBLE | Actual reduction (kWh) |
+| incentive_paid | DOUBLE | Incentive paid (AUD) |
+| participated | BOOLEAN | Whether customer participated |

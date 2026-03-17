@@ -5,7 +5,7 @@ description: "Teaches Genie Code to use Databricks built-in AI SQL functions for
 
 # AI Functions for Energy & Utilities
 
-Use Databricks built-in AI SQL functions for retail energy provider use cases. Data lives in `main.sourabh_energy_workshop` schema for a provider with ~50K customers across 5 regions (Northeast, Southeast, Midwest, Southwest, Northwest).
+Use Databricks built-in AI SQL functions for retail energy provider use cases. Data lives in `main.sourabh_energy_workshop` schema for a provider with ~50K customers across 6 Australian states (NSW, VIC, QLD, SA, WA, TAS).
 
 ## When to Use
 
@@ -32,14 +32,14 @@ Use Databricks built-in AI SQL functions for retail energy provider use cases. D
 ```sql
 SELECT * FROM ai_forecast(
   TABLE(
-    SELECT reading_date, region, total_kwh
+    SELECT reading_date, state, total_kwh
     FROM main.sourabh_energy_workshop.daily_consumption
     WHERE reading_date >= date_sub(current_date(), 365)
   ),
   horizon    => add_months(current_date(), 3),
   time_col   => 'reading_date',
   value_col  => 'total_kwh',
-  group_col  => 'region',
+  group_col  => 'state',
   frequency  => 'day'
 );
 ```
@@ -73,11 +73,11 @@ FROM main.sourabh_energy_workshop.raw_bill_text;
 ```sql
 SELECT ai_query(
   'databricks-meta-llama-3-3-70b-instruct',
-  'Summarize the top 3 drivers of high usage in the Northeast region based on: ' || summary_text,
+  'Summarize the top 3 drivers of high usage in NSW based on: ' || summary_text,
   responseFormat => 'STRUCT<drivers: ARRAY<STRING>, recommendation: STRING>'
 ) AS analysis
-FROM main.sourabh_energy_workshop.region_summaries
-WHERE region = 'Northeast'
+FROM main.sourabh_energy_workshop.state_summaries
+WHERE state = 'NSW'
 LIMIT 1;
 ```
 
@@ -97,23 +97,23 @@ SELECT
   path,
   ai_query(
     'databricks-meta-llama-3-3-70b-instruct',
-    CONCAT('Extract rate changes, effective date, and affected regions from: ',
+    CONCAT('Extract rate changes, effective date, and affected states from: ',
            doc:document:elements[0]:content::STRING),
-    responseFormat => 'STRUCT<rate_changes: STRING, effective_date: STRING, regions: ARRAY<STRING>>'
+    responseFormat => 'STRUCT<rate_changes: STRING, effective_date: STRING, states: ARRAY<STRING>>'
   ) AS filing_summary
 FROM parsed;
 ```
 
 ## Examples
 
-**Demand forecast by region:**
+**Demand forecast by state:**
 ```sql
 SELECT * FROM ai_forecast(
-  TABLE(SELECT reading_date, region, total_kwh FROM main.sourabh_energy_workshop.daily_consumption),
+  TABLE(SELECT reading_date, state, total_kwh FROM main.sourabh_energy_workshop.daily_consumption),
   horizon => '2026-06-30',
   time_col => 'reading_date',
   value_col => 'total_kwh',
-  group_col => 'region'
+  group_col => 'state'
 );
 ```
 

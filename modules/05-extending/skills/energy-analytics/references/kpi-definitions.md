@@ -13,13 +13,13 @@ Formulas, SQL snippets, and industry benchmarks for energy and utility analytics
 **SQL:**
 ```sql
 SELECT
-  region,
+  state,
   SUM(customer_minutes_interrupted) / NULLIF(COUNT(DISTINCT customer_id), 0) AS saidi_minutes
 FROM main.sourabh_energy_workshop.raw_outages o
 JOIN main.sourabh_energy_workshop.raw_customers c ON o.customer_id = c.customer_id
 WHERE outage_start >= DATE_SUB(CURRENT_DATE(), 365)
   AND outage_type = 'unplanned'  -- exclude planned maintenance
-GROUP BY region;
+GROUP BY state;
 ```
 
 **Benchmarks:**
@@ -41,13 +41,13 @@ GROUP BY region;
 **SQL:**
 ```sql
 SELECT
-  region,
+  state,
   COUNT(*) * 1.0 / NULLIF(COUNT(DISTINCT customer_id), 0) AS saifi
 FROM main.sourabh_energy_workshop.raw_outages o
 JOIN main.sourabh_energy_workshop.raw_customers c ON o.customer_id = c.customer_id
 WHERE outage_start >= DATE_SUB(CURRENT_DATE(), 365)
   AND outage_type = 'unplanned'
-GROUP BY region;
+GROUP BY state;
 ```
 
 **Benchmarks:**
@@ -70,17 +70,17 @@ GROUP BY region;
 ```sql
 -- Compute as SAIDI / SAIFI from subquery
 SELECT
-  region,
+  state,
   saidi_minutes / NULLIF(saifi, 0) AS caidi_minutes
 FROM (
   SELECT
-    region,
+    state,
     SUM(customer_minutes_interrupted) / NULLIF(COUNT(DISTINCT customer_id), 0) AS saidi_minutes,
     COUNT(*) * 1.0 / NULLIF(COUNT(DISTINCT customer_id), 0) AS saifi
   FROM main.sourabh_energy_workshop.raw_outages o
   JOIN main.sourabh_energy_workshop.raw_customers c ON o.customer_id = c.customer_id
   WHERE outage_start >= DATE_SUB(CURRENT_DATE(), 365) AND outage_type = 'unplanned'
-  GROUP BY region
+  GROUP BY state
 ) t;
 ```
 
@@ -120,12 +120,12 @@ GROUP BY customer_id;
 **SQL:**
 ```sql
 SELECT
-  region,
+  state,
   (SUM(delivered_kwh) - SUM(billed_kwh)) / NULLIF(SUM(delivered_kwh), 0) * 100 AS td_loss_pct
 FROM main.sourabh_energy_workshop.raw_billing b
 JOIN main.sourabh_energy_workshop.raw_customers c ON b.customer_id = c.customer_id
 WHERE billing_period_end >= DATE_SUB(CURRENT_DATE(), 365)
-GROUP BY region;
+GROUP BY state;
 ```
 
 **Benchmarks:**

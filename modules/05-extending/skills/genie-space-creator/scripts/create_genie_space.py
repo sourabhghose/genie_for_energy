@@ -28,10 +28,10 @@ def get_gold_tables(w: WorkspaceClient, catalog: str, schema: str) -> list[str]:
 def generate_sample_questions(tables: list[str], schema: str) -> list[str]:
     """Generate sample questions for energy/utilities domain."""
     base = [
-        f"What is the total consumption by region in {schema}?",
-        "Which region has the highest average usage?",
+        f"What is the total consumption by state in {schema}?",
+        "Which state has the highest average usage?",
         "Show me daily consumption trends for the last 30 days.",
-        "How many customers are in each region?",
+        "How many customers are in each state?",
         "What are the top 5 meters by consumption?",
     ]
     if tables:
@@ -53,7 +53,7 @@ def build_serialized_space(
         "instructions": (
             "You are exploring energy and utilities data. "
             "Use tables from main.sourabh_energy_workshop. "
-            "Regions: Northeast, Southeast, Midwest, Southwest, Northwest. "
+            "Australian states: NSW, VIC, QLD, SA, WA, TAS. "
             "Answer in clear, concise language."
         ),
     }

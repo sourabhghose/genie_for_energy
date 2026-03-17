@@ -19,19 +19,19 @@ SELECT * FROM ai_forecast(
 );
 ```
 
-### Multi-Region Forecast (group_col)
+### Multi-State Forecast (group_col)
 
 ```sql
 SELECT * FROM ai_forecast(
   TABLE(
-    SELECT reading_date, region, total_kwh
+    SELECT reading_date, state, total_kwh
     FROM main.sourabh_energy_workshop.daily_consumption
     WHERE reading_date >= date_sub(current_date(), 365)
   ),
   horizon                   => add_months(current_date(), 3),
   time_col                  => 'reading_date',
   value_col                 => 'total_kwh',
-  group_col                 => 'region',
+  group_col                 => 'state',
   prediction_interval_width => 0.90,
   frequency                 => 'day'
 );
@@ -42,13 +42,13 @@ SELECT * FROM ai_forecast(
 ```sql
 SELECT * FROM ai_forecast(
   TABLE(
-    SELECT reading_date, region, total_kwh, customer_count
+    SELECT reading_date, state, total_kwh, customer_count
     FROM main.sourabh_energy_workshop.daily_consumption
   ),
   horizon   => '2026-06-30',
   time_col  => 'reading_date',
   value_col => ARRAY('total_kwh', 'customer_count'),
-  group_col => 'region'
+  group_col => 'state'
 );
 ```
 
@@ -118,7 +118,7 @@ SELECT ai_query(
   CONCAT('From this energy summary, extract key metrics: ', summary_text),
   responseFormat => 'STRUCT<peak_usage: DOUBLE, avg_rate: DOUBLE, recommendation: STRING>'
 ) AS analysis
-FROM main.sourabh_energy_workshop.region_summaries;
+FROM main.sourabh_energy_workshop.state_summaries;
 ```
 
 ### Batch with failOnError
@@ -176,9 +176,9 @@ SELECT
   path,
   ai_query(
     'databricks-meta-llama-3-3-70b-instruct',
-    CONCAT('Extract: rate_change_pct, effective_date, affected_regions. Text: ',
+    CONCAT('Extract: rate_change_pct, effective_date, affected_states. Text: ',
            doc:document:elements[0]:content::STRING),
-    responseFormat => 'STRUCT<rate_change_pct: DOUBLE, effective_date: STRING, affected_regions: ARRAY<STRING>>'
+    responseFormat => 'STRUCT<rate_change_pct: DOUBLE, effective_date: STRING, affected_states: ARRAY<STRING>>'
   ) AS filing_data
 FROM parsed;
 ```

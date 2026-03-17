@@ -82,13 +82,13 @@
         },
         {
           "widget": {
-            "name": "region-sustainability",
+            "name": "state-sustainability",
             "queries": [{
               "name": "main_query",
               "query": {
                 "datasetName": "sustainability_summary",
                 "fields": [
-                  {"name": "region", "expression": "`region`"},
+                  {"name": "state", "expression": "`state`"},
                   {"name": "renewable_kwh", "expression": "`renewable_kwh`"},
                   {"name": "total_kwh", "expression": "`total_kwh`"},
                   {"name": "pct_renewable", "expression": "`pct_renewable`"}
@@ -101,13 +101,13 @@
               "widgetType": "table",
               "encodings": {
                 "columns": [
-                  {"fieldName": "region", "displayName": "Region"},
+                  {"fieldName": "state", "displayName": "State"},
                   {"fieldName": "renewable_kwh", "displayName": "Renewable kWh"},
                   {"fieldName": "total_kwh", "displayName": "Total kWh"},
                   {"fieldName": "pct_renewable", "displayName": "% Renewable"}
                 ]
               },
-              "frame": {"showTitle": true, "title": "By Region"}
+              "frame": {"showTitle": true, "title": "By State"}
             }
           },
           "position": {"x": 0, "y": 4, "width": 6, "height": 5}

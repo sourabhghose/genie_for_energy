@@ -70,7 +70,7 @@ customers_billing_df.display()
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC ## 5. Visualization - Consumption by Customer Segment
+# MAGIC ## 5. Visualization - Consumption by Customer Type
 # MAGIC
 # MAGIC Create a simple bar chart showing average consumption by customer segment.
 

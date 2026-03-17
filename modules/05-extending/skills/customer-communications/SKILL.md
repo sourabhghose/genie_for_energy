@@ -25,7 +25,7 @@ Generates customer-facing communications for retail energy providers. Uses templ
 
 ## Data Sources
 
-- `raw_customers` — Customer name, address, region, rate_class
+- `raw_customers` — Customer name, address, state, rate_class
 - `raw_billing` — Billing period, amounts, usage
 - `raw_outages` — Outage times, affected areas
 - `raw_demand_response` — DR program details
@@ -35,8 +35,8 @@ Generates customer-facing communications for retail energy providers. Uses templ
 | Variable | Source | Example |
 |----------|--------|---------|
 | `{{customer_name}}` | raw_customers | Jane Smith |
-| `{{service_address}}` | raw_customers | 123 Main St |
-| `{{region}}` | raw_customers | Northeast |
+| `{{service_address}}` | raw_customers | 42 Collins St, Melbourne VIC 3000 |
+| `{{state}}` | raw_customers | VIC |
 | `{{rate_class}}` | raw_customers | R1 |
 | `{{effective_date}}` | User/rate filing | 2025-04-01 |
 | `{{outage_start}}` | raw_outages | 2:00 PM |
@@ -51,7 +51,7 @@ Generates customer-facing communications for retail energy providers. Uses templ
 
 ## Edge Cases
 
-- **Regulatory requirements**: Rate change notices may need specific language; check state PUC rules
+- **Regulatory requirements**: Rate change notices may need specific language; check state energy ombudsman rules
 - **Outage severity**: Use different templates for planned vs emergency outages
 - **Multi-language**: Templates are English; add translations if required
 

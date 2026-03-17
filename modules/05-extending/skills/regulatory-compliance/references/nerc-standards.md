@@ -1,77 +1,80 @@
-# NERC Reliability Standards
+# Australian Energy Regulatory Standards
 
-Summary of key North American Electric Reliability Corporation (NERC) standards relevant to retail energy providers and distribution utilities.
+Summary of key Australian Energy Market Operator (AEMO) and Australian Energy Regulator (AER) standards relevant to retail energy providers and distribution network service providers (DNSPs).
 
-## CIP — Critical Infrastructure Protection
+## NER — National Electricity Rules
 
-| Standard | Description |
-|----------|-------------|
-| CIP-002 | Identify and classify Critical Cyber Assets |
-| CIP-003 | Security management controls |
-| CIP-005 | Electronic security perimeters |
-| CIP-006 | Physical security of Critical Cyber Assets |
-| CIP-007 | Systems security management |
-| CIP-008 | Incident reporting and response planning |
+| Chapter | Description |
+|---------|-------------|
+| Chapter 4 | Power system security — generator and network operator obligations |
+| Chapter 5 | Network connections and access — connection standards, network planning |
+| Chapter 6 | Distribution network pricing and economic regulation |
+| Chapter 6A | Transmission network pricing and economic regulation |
+| Chapter 7 | Metering — smart meter standards, data management |
 
-**Relevance:** Protects grid cyber and physical assets. Applies to entities with Bulk Electric System (BES) assets.
-
----
-
-## TPL — Transmission Planning
-
-| Standard | Description |
-|----------|-------------|
-| TPL-001 | Transmission system planning performance |
-| TPL-002 | Transmission system planning performance – extreme events |
-
-**Relevance:** Ensures transmission planning meets reliability criteria. Distribution utilities may have obligations under interconnection agreements.
+**Relevance:** The NER governs the NEM (National Electricity Market) covering NSW, VIC, QLD, SA, and TAS. WA operates under the Wholesale Electricity Market (WEM) rules.
 
 ---
 
-## PRC — Protection and Control
+## AER — Distribution Reliability Standards
 
 | Standard | Description |
 |----------|-------------|
-| PRC-002 | Disturbance monitoring and reporting |
-| PRC-004 | Protection system misoperations |
-| PRC-005 | Protection system maintenance |
+| SAIDI limits | State-specific annual SAIDI targets set by AER |
+| SAIFI limits | State-specific annual SAIFI targets set by AER |
+| GSL payments | Guaranteed Service Level payments for prolonged outages |
+| Annual reporting | DNSPs report reliability performance to AER annually |
 
-**Relevance:** Protection system performance and reporting. Affects outage cause classification and root cause analysis.
+**Relevance:** Each DNSP has regulatory targets for SAIDI and SAIFI. Exceeding targets may trigger AER review or penalty.
 
 ---
 
-## EOP — Emergency Operations
+## AEMO — Market and System Operations
 
-| Standard | Description |
+| Function | Description |
 |----------|-------------|
-| EOP-002 | Capacity and energy emergency |
-| EOP-004 | Event reporting |
-| EOP-006 | Reliability coordination – system restoration |
+| System security | Real-time management of power system stability |
+| Demand forecasting | ESOO (Electricity Statement of Opportunities) |
+| Event classification | Major event day (MED) methodology |
+| Market operations | Dispatch, pricing, settlement for NEM participants |
 
-**Relevance:** Emergency procedures and event reporting. Aligns with outage notification and restoration protocols.
+**Relevance:** AEMO classifies major event days (MEDs) which may be excluded from SAIDI/SAIFI reporting. AEMO also publishes demand forecasts used for capacity planning.
+
+---
+
+## AEMC — Rule Making
+
+| Function | Description |
+|----------|-------------|
+| Rule changes | National Electricity Rule change process |
+| Reliability standard | Unserved energy standard (currently 0.002%) |
+| Review process | Regular review of market rules and frameworks |
+
+**Relevance:** The Australian Energy Market Commission (AEMC) sets the reliability standard and reviews market rules.
 
 ---
 
 ## Distribution-Level Considerations
 
-Retail energy providers and distribution utilities typically:
+Retail energy providers and DNSPs in Australia typically:
 
-- Report reliability metrics (SAIDI, SAIFI) to state PUCs
-- Follow state-specific outage reporting rules
-- May have NERC obligations if they own/operate BES assets
-- Use NERC cause codes for outage classification where applicable
+- Report reliability metrics (SAIDI, SAIFI) to the AER annually
+- Follow state-specific outage reporting rules and GSL obligations
+- Comply with NER Chapter 7 metering standards
+- Use AEMO MED methodology for major event exclusions
+- Classify outages per AER cause code categories
 
 ---
 
 ## Cause Code Alignment
 
-Common cause codes for `raw_outages.cause_code`:
+Common cause codes for `raw_outages.cause`:
 
 | Code | Description |
 |------|-------------|
-| WEATHER | Weather-related (storm, wind, ice) |
-| EQUIPMENT | Equipment failure |
-| ANIMAL | Animal contact |
-| VEGETATION | Tree contact, vegetation |
-| HUMAN | Human error, excavation damage |
-| PLANNED | Planned maintenance (excluded from SAIDI/SAIFI) |
+| weather | Weather-related (storm, wind, lightning, heat) |
+| equipment_failure | Equipment failure (transformer, cable, switch) |
+| animal | Animal contact (possum, bird, snake) |
+| vegetation | Tree contact, vegetation encroachment |
+| planned_maintenance | Planned maintenance (excluded from SAIDI/SAIFI) |
+| unknown | Unknown or under investigation |

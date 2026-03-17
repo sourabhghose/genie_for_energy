@@ -1,17 +1,17 @@
 ---
 name: carbon-reporting
-description: Calculates Scope 1/2/3 emissions, applies EPA eGRID factors, and supports ESG reporting frameworks. Use when computing carbon footprint, emissions from electricity consumption, or preparing sustainability/ESG reports.
+description: Calculates Scope 1/2/3 emissions, applies Australian Clean Energy Regulator NGA factors, and supports ESG reporting frameworks. Use when computing carbon footprint, emissions from electricity consumption, or preparing sustainability/ESG reports.
 ---
 
 # Carbon Reporting
 
-Calculates greenhouse gas (GHG) emissions for energy utilities using Scope 1/2/3 definitions, EPA eGRID emission factors, and ESG frameworks. Data schema: `main.sourabh_energy_workshop`.
+Calculates greenhouse gas (GHG) emissions for energy utilities using Scope 1/2/3 definitions, Australian Clean Energy Regulator NGA (National Greenhouse Accounts) emission factors, and ESG frameworks. Data schema: `main.sourabh_energy_workshop`.
 
 ## When to Use
 
 - User asks about Scope 1, 2, or 3 emissions
 - User needs carbon footprint or GHG calculations
-- User mentions EPA eGRID, emission factors, or regional emissions
+- User mentions NGA factors, emission factors, or state emissions
 - User is preparing ESG, sustainability, or carbon reports
 
 ## Scope Definitions
@@ -27,51 +27,55 @@ See [emissions-definitions.md](references/emissions-definitions.md) for full def
 ## Scope 2 (Electricity) Formula
 
 ```
-Scope 2 Emissions (kg CO2e) = Consumption (kWh) × eGRID Factor (kg CO2e/MWh) / 1000
+Scope 2 Emissions (kg CO2e) = Consumption (kWh) × NGA Factor (kg CO2e/kWh)
 ```
 
-## eGRID Factors by Region
+## NGA Emission Factors by State (NEM)
 
-| Region | Subregion | kg CO2e/MWh (approx) |
-|--------|-----------|----------------------|
-| Northeast | NEWE, NYCW | 250–350 |
-| Southeast | SRMV, SRTV, SRVC | 450–550 |
-| Midwest | MROW, MRCW, SRMW | 550–750 |
-| Southwest | AZNM, ERCT | 350–450 |
-| Northwest | NWPP | 200–350 |
+| State | kg CO2e/kWh |
+|-------|-------------|
+| NSW | 0.79 |
+| VIC | 0.98 |
+| QLD | 0.81 |
+| SA | 0.35 |
+| WA | 0.69 |
+| TAS | 0.15 |
 
-See [egrid-factors.md](references/egrid-factors.md) for full EPA eGRID factors.
+**Note:** NSW, VIC, QLD, SA, and TAS are in the NEM (National Electricity Market). WA operates the separate SWIS (South West Interconnected System); use WA factors for Western Australian customers.
+
+See [egrid-factors.md](references/egrid-factors.md) for full Australian Clean Energy Regulator NGA factors.
 
 ## SQL: Scope 2 from Consumption
 
 ```sql
--- Map regions to eGRID subregions and calculate Scope 2
+-- Map states to NGA emission factors and calculate Scope 2
 WITH consumption AS (
   SELECT
-    c.region,
+    c.state,
     SUM(m.kwh) AS total_kwh
   FROM main.sourabh_energy_workshop.raw_meter_readings m
   JOIN main.sourabh_energy_workshop.raw_customers c ON m.customer_id = c.customer_id
   WHERE m.reading_date >= DATE_SUB(CURRENT_DATE(), 365)
-  GROUP BY c.region
+  GROUP BY c.state
 ),
-egrid AS (
-  SELECT region, egrid_subregion, kg_co2e_per_mwh
+nga AS (
+  SELECT state, kg_co2e_per_kwh
   FROM (VALUES
-    ('Northeast', 'NEWE', 280),
-    ('Southeast', 'SRMV', 520),
-    ('Midwest', 'MROW', 650),
-    ('Southwest', 'AZNM', 400),
-    ('Northwest', 'NWPP', 280)
-  ) AS t(region, egrid_subregion, kg_co2e_per_mwh)
+    ('NSW', 0.79),
+    ('VIC', 0.98),
+    ('QLD', 0.81),
+    ('SA', 0.35),
+    ('WA', 0.69),
+    ('TAS', 0.15)
+  ) AS t(state, kg_co2e_per_kwh)
 )
 SELECT
-  cons.region,
+  cons.state,
   cons.total_kwh,
-  e.kg_co2e_per_mwh,
-  cons.total_kwh * e.kg_co2e_per_mwh / 1000 AS scope2_kg_co2e
+  n.kg_co2e_per_kwh,
+  cons.total_kwh * n.kg_co2e_per_kwh AS scope2_kg_co2e
 FROM consumption cons
-JOIN egrid e ON cons.region = e.region;
+JOIN nga n ON cons.state = n.state;
 ```
 
 ## ESG Frameworks
@@ -83,11 +87,12 @@ JOIN egrid e ON cons.region = e.region;
 
 ## Edge Cases
 
-- **Market-based vs location-based**: Location-based uses grid average (eGRID); market-based uses contractual instruments (RECs, PPAs)
+- **Market-based vs location-based**: Location-based uses grid average (NGA factors); market-based uses contractual instruments (RECs, PPAs)
 - **Time granularity**: Hourly factors improve accuracy; annual averages are common for reporting
-- **Region mapping**: Map `main.sourabh_energy_workshop.raw_customers.region` to eGRID subregions
+- **State mapping**: Map `main.sourabh_energy_workshop.raw_customers.state` to NGA emission factors
+- **NEM vs SWIS**: WA is not in the NEM; use WA-specific factors for Western Australian customers
 
 ## Additional Resources
 
 - [references/emissions-definitions.md](references/emissions-definitions.md) — Scope 1/2/3 definitions
-- [references/egrid-factors.md](references/egrid-factors.md) — EPA eGRID emission factors by region
+- [references/egrid-factors.md](references/egrid-factors.md) — Australian Clean Energy Regulator NGA emission factors by state

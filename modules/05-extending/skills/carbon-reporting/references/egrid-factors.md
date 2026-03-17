@@ -1,53 +1,48 @@
-# EPA eGRID Emission Factors
+# Australian NGA Emission Factors
 
-EPA eGRID (Emissions & Generation Resource Integrated Database) provides emission factors for U.S. electricity by subregion. Values below are illustrative; use the latest eGRID release for reporting.
+Australian Clean Energy Regulator National Greenhouse Accounts (NGA) emission factors for electricity by state. Values below are illustrative; use the latest NGA release for reporting.
 
-## Mapping: Workshop Regions → eGRID Subregions
+## Mapping: Workshop States → NGA Emission Factors
 
-| main.sourabh_energy_workshop.region | eGRID Subregion | kg CO2e/MWh (approx) |
-|------------------------------------|-----------------|----------------------|
-| Northeast | NEWE (New England), NYCW (NYC/Westchester) | 250–350 |
-| Southeast | SRMV (SERC Mississippi Valley), SRTV, SRVC | 450–550 |
-| Midwest | MROW (MRO West), MRCW, SRMW | 550–750 |
-| Southwest | AZNM (Arizona/New Mexico), ERCT (Texas) | 350–450 |
-| Northwest | NWPP (Northwest) | 200–350 |
+| main.sourabh_energy_workshop.state | Grid | kg CO2e/kWh (approx) | Notes |
+|------------------------------------|------|----------------------|-------|
+| NSW | NEM | 0.79 | Black coal dominant |
+| VIC | NEM | 0.98 | Brown coal (Latrobe Valley) |
+| QLD | NEM | 0.81 | Mix of coal and gas |
+| SA | NEM | 0.35 | High wind and solar penetration |
+| WA | SWIS | 0.69 | Gas and coal (not in NEM) |
+| TAS | NEM | 0.15 | Predominantly hydro |
 
-## eGRID Subregion Reference (Simplified)
+## Australian Electricity Grids
 
-| Subregion | Name | kg CO2e/MWh |
-|-----------|------|-------------|
-| NEWE | New England | ~280 |
-| NYCW | NYC/Westchester | ~320 |
-| SRMV | SERC Mississippi Valley | ~520 |
-| SRTV | SERC Tennessee Valley | ~480 |
-| SRVC | SERC Virginia/Carolina | ~450 |
-| MROW | MRO West | ~650 |
-| MRCW | MRO Central | ~720 |
-| SRMW | SERC Midwest | ~680 |
-| AZNM | Arizona/New Mexico | ~400 |
-| ERCT | Texas (ERCOT) | ~420 |
-| NWPP | Northwest | ~280 |
+| Grid | Name | Coverage |
+|------|------|----------|
+| NEM | National Electricity Market | NSW, VIC, QLD, SA, TAS |
+| SWIS | South West Interconnected System | WA (Perth region) |
+| NWIS | North West Interconnected System | WA (Pilbara) |
 
 ## Usage in SQL
 
 ```sql
--- Example: Create region-to-eGRID mapping table
-CREATE OR REPLACE TABLE main.sourabh_energy_workshop.egrid_factors (
-  region STRING,
-  egrid_subregion STRING,
-  kg_co2e_per_mwh DOUBLE
+-- Create state-to-emission-factor mapping table
+CREATE OR REPLACE TABLE main.sourabh_energy_workshop.emission_factors (
+  state STRING,
+  grid STRING,
+  kg_co2e_per_kwh DOUBLE
 );
 
-INSERT INTO main.sourabh_energy_workshop.egrid_factors VALUES
-  ('Northeast', 'NEWE', 280),
-  ('Southeast', 'SRMV', 520),
-  ('Midwest', 'MROW', 650),
-  ('Southwest', 'AZNM', 400),
-  ('Northwest', 'NWPP', 280);
+INSERT INTO main.sourabh_energy_workshop.emission_factors VALUES
+  ('NSW', 'NEM', 0.79),
+  ('VIC', 'NEM', 0.98),
+  ('QLD', 'NEM', 0.81),
+  ('SA',  'NEM', 0.35),
+  ('WA',  'SWIS', 0.69),
+  ('TAS', 'NEM', 0.15);
 ```
 
 ## Data Source
 
-- **EPA eGRID**: https://www.epa.gov/egrid
-- Update factors when new eGRID release is published (typically every 2 years)
-- Use `CO2` or `CO2e` (CO2 equivalent) per reporting requirement
+- **Australian Clean Energy Regulator NGA**: https://www.cleanenergyregulator.gov.au/
+- **Department of Climate Change, Energy, the Environment and Water**: National Greenhouse Accounts Factors
+- Update factors when new NGA release is published (typically annually)
+- Use Scope 2 (indirect emissions from purchased electricity) for consumption-based reporting

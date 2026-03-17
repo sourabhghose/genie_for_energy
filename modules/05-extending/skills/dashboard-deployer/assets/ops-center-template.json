@@ -81,13 +81,13 @@
         },
         {
           "widget": {
-            "name": "region-table",
+            "name": "state-table",
             "queries": [{
               "name": "main_query",
               "query": {
                 "datasetName": "ops_summary",
                 "fields": [
-                  {"name": "region", "expression": "`region`"},
+                  {"name": "state", "expression": "`state`"},
                   {"name": "customers", "expression": "`customers`"},
                   {"name": "total_kwh", "expression": "`total_kwh`"},
                   {"name": "avg_kwh", "expression": "`avg_kwh`"}
@@ -100,13 +100,13 @@
               "widgetType": "table",
               "encodings": {
                 "columns": [
-                  {"fieldName": "region", "displayName": "Region"},
+                  {"fieldName": "state", "displayName": "State"},
                   {"fieldName": "customers", "displayName": "Customers"},
                   {"fieldName": "total_kwh", "displayName": "Total kWh"},
                   {"fieldName": "avg_kwh", "displayName": "Avg kWh"}
                 ]
               },
-              "frame": {"showTitle": true, "title": "By Region"}
+              "frame": {"showTitle": true, "title": "By State"}
             }
           },
           "position": {"x": 0, "y": 4, "width": 6, "height": 5}

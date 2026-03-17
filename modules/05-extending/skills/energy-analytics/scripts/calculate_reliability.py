@@ -18,7 +18,7 @@ def get_spark():
 
 
 def calculate_saidi_saifi(spark, exclude_planned=True):
-    """Calculate SAIDI and SAIFI by region."""
+    """Calculate SAIDI and SAIFI by state."""
     outages = spark.table(f"{SCHEMA}.raw_outages")
     customers = spark.table(f"{SCHEMA}.raw_customers")
 
@@ -29,19 +29,19 @@ def calculate_saidi_saifi(spark, exclude_planned=True):
     if exclude_planned:
         df = df.filter(F.col("outage_type") == "unplanned")
 
-    # Total customers per region (for denominator)
-    cust_counts = customers.groupBy("region").agg(
+    # Total customers per state (for denominator)
+    cust_counts = customers.groupBy("state").agg(
         F.countDistinct("customer_id").alias("total_customers")
     )
 
     # Aggregations
-    agg_df = df.groupBy("region").agg(
+    agg_df = df.groupBy("state").agg(
         F.sum("customer_minutes_interrupted").alias("total_customer_minutes"),
         F.count("*").alias("total_interruptions"),
         F.countDistinct("customer_id").alias("affected_customers"),
     )
 
-    result = agg_df.join(cust_counts, "region").withColumn(
+    result = agg_df.join(cust_counts, "state").withColumn(
         "saidi_minutes",
         F.col("total_customer_minutes") / F.nullif(F.col("total_customers"), 0),
     ).withColumn(
@@ -51,7 +51,7 @@ def calculate_saidi_saifi(spark, exclude_planned=True):
         "caidi_minutes",
         F.col("saidi_minutes") / F.nullif(F.col("saifi"), 0),
     ).select(
-        "region",
+        "state",
         "saidi_minutes",
         "saifi",
         "caidi_minutes",

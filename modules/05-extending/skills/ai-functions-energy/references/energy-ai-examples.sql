@@ -1,20 +1,20 @@
 -- Energy AI Examples for main.sourabh_energy_workshop
--- Retail energy provider: ~50K customers, 5 regions (Northeast, Southeast, Midwest, Southwest, Northwest)
+-- Retail energy provider: ~50K customers, 6 Australian states (NSW, VIC, QLD, SA, WA, TAS)
 
 -- =============================================================================
--- 1. ai_forecast: Demand prediction by region
+-- 1. ai_forecast: Demand prediction by state
 -- =============================================================================
 
 SELECT * FROM ai_forecast(
   TABLE(
-    SELECT reading_date, region, total_kwh
+    SELECT reading_date, state, total_kwh
     FROM main.sourabh_energy_workshop.daily_consumption
     WHERE reading_date >= date_sub(current_date(), 365)
   ),
   horizon                   => add_months(current_date(), 3),
   time_col                  => 'reading_date',
   value_col                 => 'total_kwh',
-  group_col                 => 'region',
+  group_col                 => 'state',
   prediction_interval_width => 0.95,
   frequency                 => 'day'
 );
@@ -50,21 +50,21 @@ FROM main.sourabh_energy_workshop.raw_bill_text
 LIMIT 50;
 
 -- =============================================================================
--- 4. ai_query: Natural language summary of region performance
+-- 4. ai_query: Natural language summary of state performance
 -- =============================================================================
 
 SELECT
-  region,
+  state,
   ai_query(
     'databricks-meta-llama-3-3-70b-instruct',
     CONCAT(
       'Summarize in one sentence the key insight from this energy data: ',
-      'Region: ', region, ', Avg usage: ', CAST(avg_kwh AS STRING), ' kWh, Trend: ', trend
+      'State: ', state, ', Avg usage: ', CAST(avg_kwh AS STRING), ' kWh, Trend: ', trend
     ),
     responseFormat => 'STRUCT<summary: STRING>'
   ) AS insight
-FROM main.sourabh_energy_workshop.region_summaries
-WHERE region = 'Northeast'
+FROM main.sourabh_energy_workshop.state_summaries
+WHERE state = 'NSW'
 LIMIT 1;
 
 -- =============================================================================
@@ -88,10 +88,10 @@ SELECT
   ai_query(
     'databricks-meta-llama-3-3-70b-instruct',
     CONCAT(
-      'Extract from this regulatory filing: rate_change_pct (number), effective_date (YYYY-MM-DD), affected_regions (comma-separated). Text: ',
+      'Extract from this regulatory filing: rate_change_pct (number), effective_date (YYYY-MM-DD), affected_states (comma-separated). Text: ',
       doc:document:elements[0]:content::STRING
     ),
-    responseFormat => 'STRUCT<rate_change_pct: DOUBLE, effective_date: STRING, affected_regions: STRING>'
+    responseFormat => 'STRUCT<rate_change_pct: DOUBLE, effective_date: STRING, affected_states: STRING>'
   ) AS filing_summary
 FROM parsed
 LIMIT 10;
@@ -100,18 +100,18 @@ LIMIT 10;
 -- 6. Combined: Forecast + classify + sentiment (pipeline pattern)
 -- =============================================================================
 
--- Step 1: Forecast next 30 days by region
-CREATE OR REPLACE TEMPORARY VIEW forecast_by_region AS
+-- Step 1: Forecast next 30 days by state
+CREATE OR REPLACE TEMPORARY VIEW forecast_by_state AS
 SELECT * FROM ai_forecast(
   TABLE(
-    SELECT reading_date, region, total_kwh
+    SELECT reading_date, state, total_kwh
     FROM main.sourabh_energy_workshop.daily_consumption
     WHERE reading_date >= date_sub(current_date(), 365)
   ),
   horizon   => date_add(current_date(), 30),
   time_col  => 'reading_date',
   value_col => 'total_kwh',
-  group_col => 'region'
+  group_col => 'state'
 );
 
 -- Step 2: Categorize recent complaints
@@ -125,5 +125,5 @@ FROM main.sourabh_energy_workshop.customer_complaints
 WHERE created_at >= date_sub(current_date(), 7);
 
 -- Step 3: Join or use in downstream queries
-SELECT * FROM forecast_by_region;
+SELECT * FROM forecast_by_state;
 SELECT * FROM complaints_categorized;

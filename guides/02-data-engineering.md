@@ -18,14 +18,14 @@ Our energy company ingests raw meter data, billing records, and weather data. We
 
 | Table | Rows | Key Columns |
 |-------|------|-------------|
-| `raw_customers` | 50K | account_id, customer_name, region, customer_type, rate_plan, has_solar, has_ev |
+| `raw_customers` | 50K | account_id, customer_name, state, customer_type, rate_plan, has_solar, has_ev |
 | `raw_meter_readings` | 10.7M | meter_id, customer_id, timestamp, kwh_consumed, is_peak_hour |
 | `raw_billing` | 600K | bill_id, customer_id, billing_period, total_kwh, amount_charged, is_delinquent |
-| `raw_weather` | 1.8K | date, region, temp_high, temp_low, humidity, precipitation |
-| `raw_equipment` | 2K | equipment_id, equipment_type, region, failure_count, current_load_pct |
-| `raw_outages` | 5K | outage records by region |
+| `raw_weather` | 2.2K | date, state, temp_high_c, temp_low_c, humidity, precipitation |
+| `raw_equipment` | 2K | equipment_id, equipment_type, state, failure_count, current_load_pct |
+| `raw_outages` | 5K | outage records by state |
 
-**Regions:** Northeast, Southeast, Midwest, Southwest, Northwest
+**States:** NSW, VIC, QLD, SA, WA, TAS
 
 **Known data quality issues:**
 - ~2% null meter readings
@@ -50,7 +50,7 @@ Our energy company ingests raw meter data, billing records, and weather data. We
 Type this exact prompt into the Genie Code agent:
 
 ```
-Build a medallion architecture pipeline for our energy data. Ingest raw_meter_readings, raw_customers, raw_billing, and raw_weather from main.sourabh_energy_workshop. Clean the data, handle nulls and duplicates, and create gold-layer aggregations for customer consumption profiles and regional grid load.
+Build a medallion architecture pipeline for our energy data. Ingest raw_meter_readings, raw_customers, raw_billing, and raw_weather from main.sourabh_energy_workshop. Clean the data, handle nulls and duplicates, and create gold-layer aggregations for customer consumption profiles and state-level grid load.
 ```
 
 ### 2.2 What to Watch For
@@ -61,17 +61,17 @@ Genie Code will create:
 |-------|-----------------|---------|
 | **Bronze** | `bronze_meter_readings`, `bronze_customers`, `bronze_billing`, `bronze_weather` | Schema enforcement, raw ingestion |
 | **Silver** | `silver_meter_readings`, `silver_customers`, `silver_billing`, `silver_weather` | Cleaning, dedup, validation |
-| **Gold** | `gold_customer_consumption`, `gold_regional_load`, `gold_billing_summary` | Aggregations for analytics |
+| **Gold** | `gold_customer_consumption`, `gold_state_load`, `gold_billing_summary` | Aggregations for analytics |
 
 **Silver layer specifics:**
 - `silver_meter_readings`: nulls and negatives removed, deduplicated
-- `silver_customers`: standardized region/customer_type
+- `silver_customers`: standardized state/customer_type
 - `silver_billing`: deduplicated by bill_id, reconciled
-- `silver_weather`: validated date/region ranges
+- `silver_weather`: validated date/state ranges
 
 **Gold layer specifics:**
 - `gold_customer_consumption`: monthly profiles per customer
-- `gold_regional_load`: hourly consumption by region
+- `gold_state_load`: hourly consumption by state
 - `gold_billing_summary`: revenue metrics, payment stats
 
 ### 2.3 Review Generated Files
@@ -162,17 +162,17 @@ Add a gold table called gold_equipment_health that joins equipment data with out
 |--------|-------------|
 | `equipment_id` | From raw_equipment |
 | `equipment_type` | From raw_equipment |
-| `region` | From raw_equipment |
+| `state` | From raw_equipment |
 | `age_years` | Derived from install_date |
 | `failure_count` | From raw_equipment |
 | `current_load_pct` | From raw_equipment |
-| `nearby_outage_count` | Count of outages in same region |
+| `nearby_outage_count` | Count of outages in same state |
 | `risk_score` | Composite score (e.g., weighted combination) |
 
 ### Tips
 
 - If Genie Code's output differs slightly from expected, that's normal—it's non-deterministic. The important thing is the general approach: bronze/silver/gold, joins, and aggregation.
-- You may need to clarify the join key between equipment and outages (e.g., region, or a spatial/temporal relationship).
+- You may need to clarify the join key between equipment and outages (e.g., state, or a spatial/temporal relationship).
 
 ---
 

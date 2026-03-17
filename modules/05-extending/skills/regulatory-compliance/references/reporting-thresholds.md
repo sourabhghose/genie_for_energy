@@ -6,8 +6,8 @@ Thresholds for energy utility regulatory reporting. Values are illustrative; ver
 
 | Metric | Threshold | Action |
 |--------|-----------|--------|
-| SAIDI | > 90 min/customer/year | Report to state PUC; may trigger corrective action plan |
-| SAIFI | > 1.2 events/customer/year | Report to state PUC |
+| SAIDI | > 90 min/customer/year | Report to AER; may trigger corrective action plan |
+| SAIFI | > 1.2 events/customer/year | Report to AER |
 | CAIDI | > 90 min/event | Review restoration practices |
 
 ## Major Event Exclusion

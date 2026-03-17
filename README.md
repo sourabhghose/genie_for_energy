@@ -6,7 +6,7 @@ A comprehensive, modular workshop for learning **Databricks Genie Code** by buil
 
 ## Workshop Theme
 
-**SmartGrid Analytics Platform** -- Build analytics covering customer segmentation, demand forecasting, grid reliability, predictive maintenance, and sustainability reporting for a retail energy provider serving 50,000 customers across 5 US regions.
+**SmartGrid Analytics Platform** -- Build analytics covering customer segmentation, demand forecasting, grid reliability, predictive maintenance, and sustainability reporting for a retail energy provider serving 50,000 customers across 6 Australian states (NSW, VIC, QLD, SA, WA, TAS). Includes geospatial coordinates for map visualizations.
 
 ## Getting Started
 
@@ -48,7 +48,7 @@ genie_for_energy/
 │   ├── 03-data-science/
 │   │   └── prompt_guide.py            # ML prompts (segmentation, forecasting, churn)
 │   ├── 04-dashboards/
-│   │   └── prompt_guide.py            # 12 dashboard building prompts
+│   │   └── prompt_guide.py            # 15 dashboard building prompts (incl. maps)
 │   ├── 04b-debugging-observability/
 │   │   ├── prompt_guide.py            # Debugging scenarios guide
 │   │   └── broken_notebook.py         # Notebook with 4 complex bugs
@@ -61,7 +61,7 @@ genie_for_energy/
 │   │       ├── knowledge-assistant-creator/ # Tier 3: Creates RAG assistants
 │   │       ├── ai-functions-energy/   # Tier 2: AI SQL functions
 │   │       ├── energy-analytics/      # Tier 1: KPIs & data dictionary
-│   │       ├── regulatory-compliance/ # Tier 1: NERC standards
+│   │       ├── regulatory-compliance/ # Tier 1: AEMO/AER standards
 │   │       ├── carbon-reporting/      # Tier 1: Emissions & ESG
 │   │       └── customer-communications/ # Tier 1: Customer templates
 │   ├── 06-genai-observability/
@@ -81,7 +81,7 @@ Each module is independent and can be combined based on audience and time:
 | **1: Fundamentals** | 60 min | Notebooks (Chat) | All slash commands, inline assistant, autocomplete, error handling |
 | **2: Data Engineering** | 60 min | Lakeflow (Agent) | Build a medallion pipeline for energy data |
 | **3: Data Science** | 60 min | Notebooks (Agent) | Customer segmentation, demand forecasting, churn prediction |
-| **4: Dashboards** | 90 min | Dashboards (Agent) | Full lifecycle: creation to publishing, 12 prompts |
+| **4: Dashboards** | 90 min | Dashboards (Agent) | Full lifecycle: creation to publishing, 15 prompts (incl. map/geo) |
 | **4B: Debugging** | 60 min | All Surfaces | Cross-surface debugging and observability |
 | **5: Extending** | 75 min | All | Custom instructions, 10 Agent Skills, MCP integration |
 | **6: GenAI Observability** | 60 min | MLflow (Agent) | Trace analysis, evaluation, instrumentation |
@@ -106,13 +106,13 @@ All data is generated via Faker + PySpark. No external downloads needed.
 
 | Table | Rows | Key Features |
 |-------|------|-------------|
-| `raw_customers` | 50,000 | 5 regions, 3 customer types, 4 rate plans, solar/EV flags |
-| `raw_meter_readings` | ~10.7M | Hourly intervals, realistic diurnal curves, seasonal patterns |
-| `raw_billing` | ~603K | Monthly bills, 8% delinquency rate, 0.5% duplicate records |
-| `raw_outages` | 5,000 | 6 cause types, exponential duration, 1% future-dated (DQ issue) |
-| `raw_weather` | 1,825 | 365 days x 5 regions, temp/humidity/wind/precipitation |
-| `raw_equipment` | 2,000 | 5 asset types, age-correlated failure rates |
-| `raw_demand_response` | 20,000 | 70% participation rate, 3 event types |
+| `raw_customers` | 50,000 | 6 Australian states, 3 customer types, 4 rate plans, solar/EV flags, lat/lon coordinates |
+| `raw_meter_readings` | ~10.7M | Hourly intervals, 230V grid, realistic diurnal curves, seasonal patterns (Southern Hemisphere) |
+| `raw_billing` | ~603K | Monthly bills in AUD, 8% delinquency rate, 0.5% duplicate records |
+| `raw_outages` | 5,000 | 6 cause types, exponential duration, lat/lon coordinates, 1% future-dated (DQ issue) |
+| `raw_weather` | 2,190 | 365 days x 6 states, Celsius temps, humidity, wind (km/h), precipitation (mm) |
+| `raw_equipment` | 2,000 | 5 asset types, age-correlated failure rates, lat/lon coordinates |
+| `raw_demand_response` | 20,000 | 70% participation rate, 3 event types, AUD incentives |
 
 **Seeded data quality issues** for realistic cleaning exercises:
 - ~2% null meter readings
@@ -138,7 +138,7 @@ All data is generated via Faker + PySpark. No external downloads needed.
 | 3 | `knowledge-assistant-creator` | "Create a Knowledge Assistant for rate docs" |
 | 2 | `ai-functions-energy` | "Forecast next week's demand" |
 | 1 | `energy-analytics` | "Calculate our reliability KPIs" |
-| 1 | `regulatory-compliance` | "Check if we meet NERC standards" |
+| 1 | `regulatory-compliance` | "Check if we meet AEMO/AER standards" |
 | 1 | `carbon-reporting` | "Calculate our Scope 2 emissions" |
 | 1 | `customer-communications` | "Generate rate change notices" |
 

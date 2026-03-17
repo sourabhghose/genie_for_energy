@@ -28,7 +28,7 @@
 
 # MAGIC %md
 # MAGIC ```
-# MAGIC Using tables in main.sourabh_energy_workshop, build a customer segmentation model. Join raw_customers with raw_meter_readings and raw_billing to create features: average monthly consumption, total amount due, payment frequency, and customer segment. Use K-Means clustering with k=4 to segment customers. Save the model to MLflow and display the segment distribution with a bar chart.
+# MAGIC Using tables in main.sourabh_energy_workshop, build a customer segmentation model. Join raw_customers with raw_meter_readings and raw_billing to create features: average monthly consumption, total amount due, payment frequency, and customer_type. Use K-Means clustering with k=4 to segment customers. Save the model to MLflow and display the segment distribution with a bar chart.
 # MAGIC ```
 # MAGIC
 

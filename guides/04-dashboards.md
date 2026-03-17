@@ -8,7 +8,7 @@
 
 - Access to Databricks workspace with AI/BI (Lakeview) enabled
 - Catalog/Schema: `main.sourabh_energy_workshop`
-- Tables: `raw_customers` (50K), `raw_billing` (600K), `raw_outages` (5K), `raw_equipment` (2K), `raw_meter_readings` (10.7M), `raw_weather` (1.8K), `raw_demand_response` (20K)
+- Tables: `raw_customers` (50K), `raw_billing` (600K), `raw_outages` (5K), `raw_equipment` (2K), `raw_meter_readings` (10.7M), `raw_weather` (2.2K), `raw_demand_response` (20K)
 - Genie Code pane available (Agent mode)
 
 ![Data Model](../images/00-data-model.png)
@@ -34,7 +34,7 @@
 Copy and paste this prompt into Genie Code:
 
 ```
-Build an energy operations dashboard using these tables from main.sourabh_energy_workshop: raw_customers, raw_billing, raw_outages, raw_equipment. Include: (1) Revenue and consumption trends over time, (2) Regional grid load comparison, (3) Customer type distribution as a pie chart, (4) Outage frequency and duration by cause as a stacked bar, (5) Top 10 at-risk equipment by load percentage. Add filters for date range, region, and customer type.
+Build an energy operations dashboard using these tables from main.sourabh_energy_workshop: raw_customers, raw_billing, raw_outages, raw_equipment. Include: (1) Revenue and consumption trends over time, (2) State-level grid load comparison, (3) Customer type distribution as a pie chart, (4) Outage frequency and duration by cause as a stacked bar, (5) Top 10 at-risk equipment by load percentage. Add filters for date range, state, and customer type.
 ```
 
 **What to watch:**
@@ -49,9 +49,9 @@ Build an energy operations dashboard using these tables from main.sourabh_energy
 |------|---------|
 | **Datasets** | SQL queries that define the data for each visualization |
 | **Widgets** | Individual charts, tables, KPIs, and filters |
-| **Parameters** | Filters that let users slice data (date range, region, customer type) |
+| **Parameters** | Filters that let users slice data (date range, state, customer type) |
 
-**Expected result:** A dashboard with 5+ visualizations and 3 filters. Revenue/consumption trends as a line chart, regional comparison as a bar chart, customer type as a pie chart, outage cause as a stacked bar, and an equipment table.
+**Expected result:** A dashboard with 5+ visualizations and 3 filters. Revenue/consumption trends as a line chart, state comparison as a bar chart, customer type as a pie chart, outage cause as a stacked bar, and an equipment table.
 
 ---
 
@@ -68,10 +68,10 @@ Add a custom calculation to categorize customers into consumption tiers: 'Low' (
 ### Prompt 3: Rolling Averages and Percent of Total
 
 ```
-Add a rolling 7-day average consumption trend using a window function, and show each region's consumption as a percentage of total.
+Add a rolling 7-day average consumption trend using a window function, and show each state's consumption as a percentage of total.
 ```
 
-**Expected result:** A line chart with a 7-day rolling average, and a chart or table showing regional consumption as % of total.
+**Expected result:** A line chart with a 7-day rolling average, and a chart or table showing state consumption as % of total.
 
 **Key concepts – 4 types of custom calculations:**
 
@@ -79,7 +79,7 @@ Add a rolling 7-day average consumption trend using a window function, and show 
 |------|----------|---------|
 | **Calculated measures** | Aggregations with formulas | `SUM(amount_charged) / SUM(total_kwh)` |
 | **Calculated dimensions** | CASE/WHEN logic | `CASE WHEN total_kwh < 500 THEN 'Low' ...` |
-| **LOD expressions** | Fixed-level aggregations | Total across all regions for % calculation |
+| **LOD expressions** | Fixed-level aggregations | Total across all states |
 | **Window functions** | Rolling, ranking, running totals | `AVG(kwh) OVER (ORDER BY date ROWS 6 PRECEDING)` |
 
 ---
@@ -89,10 +89,10 @@ Add a rolling 7-day average consumption trend using a window function, and show 
 ### Prompt 4: Gauge, KPI, and Heatmap
 
 ```
-Add a gauge chart showing equipment utilization for each region, a single-value KPI showing total MWh consumed this month, and a heatmap of outages by cause and region.
+Add a gauge chart showing equipment utilization for each state, a single-value KPI showing total MWh consumed this month, and a heatmap of outages by cause and state.
 ```
 
-**Expected result:** A gauge (or similar) for equipment load by region, a large KPI number for MWh, and a heatmap with cause on one axis and region on the other.
+**Expected result:** A gauge (or similar) for equipment load by state, a large KPI number for MWh, and a heatmap with cause on one axis and state on the other.
 
 ### Prompt 5: Conditional Formatting
 
@@ -111,10 +111,10 @@ Apply conditional formatting to the equipment table: red for current_load_pct > 
 ### Prompt 6: Cross-Filtering and Drill-Through
 
 ```
-Enable cross-filtering so clicking a region in the bar chart filters all other widgets. Add drill-through from the regional chart to a detail page showing that region's equipment and outage breakdown.
+Enable cross-filtering so clicking a state in the bar chart filters all other widgets. Add drill-through from the state chart to a detail page showing that state's equipment and outage breakdown.
 ```
 
-**Expected result:** Clicking a region in the bar chart filters all widgets. A drill-through action opens a detail page with equipment and outage data for that region.
+**Expected result:** Clicking a state in the bar chart filters all widgets. A drill-through action opens a detail page with equipment and outage data for that state.
 
 ### Prompt 7: Query-Based Parameter
 
@@ -156,7 +156,46 @@ Add explanatory text and section headers so non-technical executives can underst
 
 ---
 
-## 4F: Publishing & Sharing (10 min)
+## 4F: Map Visualizations (15 min)
+
+The dataset includes latitude and longitude coordinates on `raw_customers`, `raw_outages`, and `raw_equipment`, enabling geographic visualizations across Australia.
+
+### Prompt 13: Outage Map
+
+```
+Add a map visualization showing outage locations across Australia. Use raw_outages from main.sourabh_energy_workshop — it has latitude and longitude columns. Color-code markers by cause (weather, equipment_failure, vegetation, etc.). Size markers by affected_meters_count. Title: "Outage Map — Australia".
+```
+
+**Expected result:** A map centred on Australia with markers for each outage, coloured by cause and sized by impact.
+
+### Prompt 14: Customer Density Map
+
+```
+Add a customer density map showing where our 50K customers are located across Australia. Use raw_customers from main.sourabh_energy_workshop — it has latitude and longitude columns. Use a heatmap or cluster layer to show density. Add a filter for customer_type (residential, commercial, industrial).
+```
+
+**Expected result:** A heatmap or clustered marker map showing customer concentrations across Australian cities.
+
+### Prompt 15: Equipment & Outage Overlay Map
+
+```
+Create a "Grid Infrastructure" map page. Plot equipment locations from raw_equipment (has latitude, longitude) colored by equipment_type, and overlay outage locations from raw_outages (also has latitude, longitude) colored by restoration_priority. Use main.sourabh_energy_workshop. Add filters for state and equipment_type.
+```
+
+**Expected result:** A dual-layer map enabling spatial correlation between infrastructure and outage hotspots.
+
+**Key concepts:**
+
+| Concept | Details |
+|---------|---------|
+| **Coordinate columns** | `latitude` and `longitude` (DOUBLE) on customers, outages, and equipment |
+| **Map types** | Scatter-on-map, heatmap, clustered markers |
+| **Encoding** | Colour by category (cause, type), size by numeric (affected_meters_count) |
+| **Filtering** | State and customer_type filters work with map widgets |
+
+---
+
+## 4G: Publishing & Sharing (10 min)
 
 ### Prompt 11: Understand Publishing Options
 
@@ -186,7 +225,7 @@ Help me understand the publishing options for this dashboard.
 
 ---
 
-## 4G: Debugging (10 min)
+## 4H: Debugging (10 min)
 
 ### Step: Break a Dataset
 
@@ -210,7 +249,7 @@ The revenue trend widget is showing an error. Fix it.
 
 ---
 
-## 4H: Dashboard as Code (5 min)
+## 4I: Dashboard as Code (5 min)
 
 ### Brief Overview
 
@@ -226,13 +265,13 @@ The revenue trend widget is showing an error. Fix it.
 
 **Build an "Equipment Reliability" page** with:
 
-1. **Box plot** – Distribution of `current_load_pct` or `failure_count` by region
-2. **Choropleth** – Geographic view of equipment load or outage density by region
-3. **Detail table** – Equipment list with key columns (equipment_id, type, region, load %, failure count)
-4. **Cross-filtering** – Clicking a region filters the box plot and table
+1. **Box plot** – Distribution of `current_load_pct` or `failure_count` by state
+2. **Choropleth** – Geographic view of equipment load or outage density by state
+3. **Detail table** – Equipment list with key columns (equipment_id, type, state, load %, failure count)
+4. **Cross-filtering** – Clicking a state filters the box plot and table
 
 **Time:** ~15 minutes  
-**Hint:** Use `raw_equipment` and `raw_outages`. If choropleth isn’t available, use a bar or heatmap by region instead.
+**Hint:** Use `raw_equipment` and `raw_outages`. If choropleth isn’t available, use a bar or heatmap by state instead.
 
 ---
 
@@ -242,7 +281,7 @@ The revenue trend widget is showing an error. Fix it.
 |-------|--------------|
 | Widget shows "Invalid widget definition" | Check dataset column names match widget field names; verify widget spec version |
 | Filter not affecting widgets | Ensure the filter field exists in the dataset used by those widgets |
-| Empty charts | Run the dataset SQL directly to verify data; check date/region filters |
+| Empty charts | Run the dataset SQL directly to verify data; check date/state filters |
 | Slow load | Add filters, reduce date range, or optimize SQL (e.g., pre-aggregate) |
 
 ---

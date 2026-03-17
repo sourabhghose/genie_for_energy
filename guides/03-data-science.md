@@ -18,11 +18,11 @@ Marketing wants customer segments for targeted campaigns. Operations wants deman
 
 | Table | Key Columns |
 |-------|-------------|
-| `raw_customers` | account_id, customer_name, region, customer_type, rate_plan, signup_date, contract_end_date, has_solar, has_ev |
+| `raw_customers` | account_id, customer_name, state, customer_type, rate_plan, signup_date, contract_end_date, has_solar, has_ev |
 | `raw_billing` | bill_id, customer_id, billing_period, total_kwh, peak_kwh, off_peak_kwh, amount_charged, amount_paid, payment_date, balance, is_delinquent |
 | `raw_meter_readings` | meter_id, customer_id, timestamp, kwh_consumed, is_peak_hour |
-| `raw_weather` | date, region, temp_high, temp_low, humidity, wind_speed, precipitation, is_extreme_heat, is_extreme_cold |
-| `raw_outages` | outage records by region |
+| `raw_weather` | date, state, temp_high_c, temp_low_c, humidity, wind_speed, precipitation, is_extreme_heat, is_extreme_cold |
+| `raw_outages` | outage records by state |
 
 **Join key:** `raw_customers.account_id` = `raw_billing.customer_id`
 
@@ -64,7 +64,7 @@ Can you name each segment and describe their characteristics? Which segment shou
 **Prompt 2 – Add propensity score:**
 
 ```
-Add a solar adoption propensity score based on consumption patterns and region
+Add a solar adoption propensity score based on consumption patterns and state
 ```
 
 ### Key Concept
@@ -80,7 +80,7 @@ Genie Code reads your data context, chooses features, and iterates. You don’t 
 Type:
 
 ```
-Build a demand forecasting model that predicts daily energy consumption for each region over the next 7 days. Use meter readings from main.sourabh_energy_workshop.raw_meter_readings aggregated to daily totals by region, joined with weather data from main.sourabh_energy_workshop.raw_weather. Include temperature as a key feature since consumption is weather-dependent.
+Build a demand forecasting model that predicts daily energy consumption for each state over the next 7 days. Use meter readings from main.sourabh_energy_workshop.raw_meter_readings aggregated to daily totals by state, joined with weather data from main.sourabh_energy_workshop.raw_weather. Include temperature as a key feature since consumption is weather-dependent.
 ```
 
 ### Step 2: What to Watch
@@ -113,7 +113,7 @@ Build a churn prediction model. Define churn as a customer whose contract_end_da
 
 ### Step 2: What to Watch
 
-- **Feature engineering:** Payment delinquency, consumption trends, tenure, region, outage exposure.
+- **Feature engineering:** Payment delinquency, consumption trends, tenure, state, outage exposure.
 - **Classifier training:** Logistic regression, Random Forest, or XGBoost.
 - **Feature importance:** Which features drive churn.
 - **ROC curve:** Model performance visualization.
@@ -173,6 +173,6 @@ Analyze demand response program effectiveness. Join raw_demand_response with raw
 | Use Case | Prompt |
 |----------|--------|
 | Segmentation | "Analyze our energy customers and segment them into meaningful groups based on their consumption patterns, billing behavior, and demographics. Use main.sourabh_energy_workshop.raw_billing joined with main.sourabh_energy_workshop.raw_customers on account_id = customer_id..." |
-| Demand forecast | "Build a demand forecasting model that predicts daily energy consumption for each region over the next 7 days. Use meter readings from main.sourabh_energy_workshop.raw_meter_readings aggregated to daily totals by region, joined with weather data from main.sourabh_energy_workshop.raw_weather..." |
+| Demand forecast | "Build a demand forecasting model that predicts daily energy consumption for each state over the next 7 days. Use meter readings from main.sourabh_energy_workshop.raw_meter_readings aggregated to daily totals by state, joined with weather data from main.sourabh_energy_workshop.raw_weather..." |
 | Churn | "Build a churn prediction model. Define churn as a customer whose contract_end_date is within the next 90 days and has at least 2 delinquent bills in the past 6 months..." |
 | Demand response | "Analyze demand response program effectiveness. Join raw_demand_response with raw_customers and raw_billing..." |

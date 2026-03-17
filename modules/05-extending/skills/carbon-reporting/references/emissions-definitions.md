@@ -67,7 +67,7 @@ Emissions in the value chain not included in Scope 1 or 2.
 
 | Method | Description |
 |--------|-------------|
-| **Location-based** | Uses grid average emission factor (e.g., EPA eGRID) for the geographic region |
+| **Location-based** | Uses grid average emission factor (e.g., Australian NGA factors) for the geographic state |
 | **Market-based** | Uses emission factors from contractual instruments (RECs, PPAs, tariffs) |
 
 Most reports include both. Location-based reflects physical grid; market-based reflects procurement choices.

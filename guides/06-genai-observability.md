@@ -246,7 +246,7 @@ Help me add tracing to my energy chatbot code
 ### Practical Tips
 - Use `autolog()` first for quick setup; add manual spans for custom logic
 - Ensure trace context is passed through async or multi-turn flows
-- Add span attributes (e.g., `customer_id`, `region`) for filtering
+- Add span attributes (e.g., `customer_id`, `state`) for filtering
 
 ---
 

@@ -5,7 +5,7 @@ description: Calculates energy and utility KPIs including SAIDI, SAIFI, CAIDI, L
 
 # Energy Analytics
 
-Calculates industry-standard energy and utility KPIs for retail energy providers. Data schema: `main.sourabh_energy_workshop` (~50K customers, 5 regions: Northeast, Southeast, Midwest, Southwest, Northwest).
+Calculates industry-standard energy and utility KPIs for retail energy providers. Data schema: `main.sourabh_energy_workshop` (~50K customers, 6 Australian states: NSW, VIC, QLD, SA, WA, TAS).
 
 ## When to Use
 
@@ -38,21 +38,21 @@ See [energy-data-dictionary.md](references/energy-data-dictionary.md) for column
 ```sql
 -- SAIDI: System Average Interruption Duration Index (minutes)
 SELECT
-  region,
+  state,
   SUM(customer_minutes_interrupted) / NULLIF(COUNT(DISTINCT customer_id), 0) AS saidi_minutes
 FROM main.sourabh_energy_workshop.raw_outages o
 JOIN main.sourabh_energy_workshop.raw_customers c ON o.customer_id = c.customer_id
 WHERE outage_start >= DATE_SUB(CURRENT_DATE(), 365)
-GROUP BY region;
+GROUP BY state;
 
 -- SAIFI: System Average Interruption Frequency Index (events per customer)
 SELECT
-  region,
+  state,
   COUNT(*) * 1.0 / NULLIF(COUNT(DISTINCT customer_id), 0) AS saifi
 FROM main.sourabh_energy_workshop.raw_outages o
 JOIN main.sourabh_energy_workshop.raw_customers c ON o.customer_id = c.customer_id
 WHERE outage_start >= DATE_SUB(CURRENT_DATE(), 365)
-GROUP BY region;
+GROUP BY state;
 
 -- CAIDI = SAIDI / SAIFI (average duration per interruption)
 ```
@@ -72,12 +72,12 @@ GROUP BY customer_id;
 
 ```sql
 SELECT
-  region,
+  state,
   (SUM(delivered_kwh) - SUM(billed_kwh)) / NULLIF(SUM(delivered_kwh), 0) * 100 AS td_loss_pct
 FROM main.sourabh_energy_workshop.raw_billing b
 JOIN main.sourabh_energy_workshop.raw_customers c ON b.customer_id = c.customer_id
 WHERE billing_period_end >= DATE_SUB(CURRENT_DATE(), 365)
-GROUP BY region;
+GROUP BY state;
 ```
 
 ## DR Effectiveness

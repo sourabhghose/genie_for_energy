@@ -105,7 +105,7 @@
 
 # MAGIC %md
 # MAGIC ```
-# MAGIC Add a horizontal bar chart showing average consumption by customer_segment. Use raw_customers joined with raw_meter_readings from main.sourabh_energy_workshop. Group by customer_segment, aggregate avg(kwh_consumed). Title: "Consumption by Customer Segment".
+# MAGIC Add a horizontal bar chart showing average consumption by customer_type. Use raw_customers joined with raw_meter_readings from main.sourabh_energy_workshop. Group by customer_type, aggregate avg(kwh_consumed). Title: "Consumption by Customer Type".
 # MAGIC ```
 # MAGIC
 # MAGIC **Expected behavior:** Genie Code creates a bar chart with segments on one axis and average consumption on the other.
@@ -125,7 +125,7 @@
 
 # MAGIC %md
 # MAGIC ```
-# MAGIC Enable cross-filtering on the SmartGrid Operations Center dashboard. When I click a region on the outage map or a segment on the bar chart, all other widgets should filter to that selection.
+# MAGIC Enable cross-filtering on the SmartGrid Operations Center dashboard. When I click a state on the outage map or a segment on the bar chart, all other widgets should filter to that selection.
 # MAGIC ```
 # MAGIC
 # MAGIC **Expected behavior:** Genie Code configures dashboard-level or page-level cross-filtering so selections propagate.
@@ -145,7 +145,7 @@
 
 # MAGIC %md
 # MAGIC ```
-# MAGIC Add a dropdown parameter to filter the dashboard by region. Use the region column from raw_outages or raw_customers in main.sourabh_energy_workshop. Default to "All Regions". Apply this filter to all widgets on the page.
+# MAGIC Add a dropdown parameter to filter the dashboard by state. Use the state column from raw_outages or raw_customers in main.sourabh_energy_workshop. Default to "All States". Apply this filter to all widgets on the page.
 # MAGIC ```
 # MAGIC
 # MAGIC **Expected behavior:** Genie Code adds a parameter control and wires it to filter all visualizations.
@@ -165,7 +165,7 @@
 
 # MAGIC %md
 # MAGIC ```
-# MAGIC Add a what-if widget: let me enter a hypothetical rate ($/kWh). Show projected revenue = sum(kwh_consumed) * rate from raw_meter_readings in main.sourabh_energy_workshop. Display the result as a KPI that updates when I change the rate.
+# MAGIC Add a what-if widget: let me enter a hypothetical rate (AUD/kWh). Show projected revenue = sum(kwh_consumed) * rate from raw_meter_readings in main.sourabh_energy_workshop. Display the result as a KPI that updates when I change the rate.
 # MAGIC ```
 # MAGIC
 # MAGIC **Expected behavior:** Genie Code adds an input parameter for rate and a calculated KPI for projected revenue.
@@ -251,6 +251,66 @@
 # MAGIC **Expected behavior:** Genie Code walks through validation steps: table existence, query syntax, filter logic, and suggests fixes.
 # MAGIC
 # MAGIC **Key concepts:** Dashboard debugging, dataset validation, query troubleshooting.
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC ## Prompt 13: Map Visualization - Outage Locations
+# MAGIC
+# MAGIC **When to use:** When you need a geographic view of outages, customers, or equipment across Australia.
+# MAGIC
+# MAGIC **Exact prompt to type:**
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC ```
+# MAGIC Add a map visualization showing outage locations across Australia. Use raw_outages from main.sourabh_energy_workshop — it has latitude and longitude columns. Color-code markers by cause (weather, equipment_failure, vegetation, etc.). Size markers by affected_meters_count. Title: "Outage Map — Australia".
+# MAGIC ```
+# MAGIC
+# MAGIC **Expected behavior:** Genie Code creates a map (scatter-on-map or marker map) using the lat/lon columns from raw_outages. Markers are colored by cause type and sized by impact.
+# MAGIC
+# MAGIC **Key concepts:** Map visualizations, latitude/longitude columns, color encoding, size encoding.
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC ## Prompt 14: Map Visualization - Customer Density
+# MAGIC
+# MAGIC **When to use:** When you want to see where customers are concentrated geographically.
+# MAGIC
+# MAGIC **Exact prompt to type:**
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC ```
+# MAGIC Add a customer density map showing where our 50K customers are located across Australia. Use raw_customers from main.sourabh_energy_workshop — it has latitude and longitude columns. Use a heatmap or cluster layer to show density. Add a filter for customer_type (residential, commercial, industrial).
+# MAGIC ```
+# MAGIC
+# MAGIC **Expected behavior:** Genie Code creates a heatmap or clustered marker map of customer locations using lat/lon.
+# MAGIC
+# MAGIC **Key concepts:** Heatmap layers, geographic density, coordinate-based mapping.
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC ## Prompt 15: Map Visualization - Equipment & Outage Overlay
+# MAGIC
+# MAGIC **When to use:** When you want to correlate equipment locations with outage hotspots.
+# MAGIC
+# MAGIC **Exact prompt to type:**
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC ```
+# MAGIC Create a "Grid Infrastructure" map page. Plot equipment locations from raw_equipment (has latitude, longitude) colored by equipment_type, and overlay outage locations from raw_outages (also has latitude, longitude) colored by restoration_priority. Use main.sourabh_energy_workshop. Add filters for state and equipment_type.
+# MAGIC ```
+# MAGIC
+# MAGIC **Expected behavior:** Genie Code creates a map page with two layers — equipment and outages — enabling spatial correlation analysis.
+# MAGIC
+# MAGIC **Key concepts:** Multi-layer maps, spatial overlay, infrastructure visualization.
 
 # COMMAND ----------
 

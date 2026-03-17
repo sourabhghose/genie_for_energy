@@ -34,12 +34,12 @@ User-level instructions let you customize Genie Code's behavior for your domain.
 - Always use PySpark DataFrames for data processing, never pandas for large datasets
 - Follow medallion naming: bronze_, silver_, gold_ prefixes
 - Use kWh (not kwh or KWH) as the energy unit label
-- When showing monetary values, use USD with 2 decimal places
+- When showing monetary values, use AUD with 2 decimal places
 - Include data quality checks in all transformations
 - Prefer Plotly for visualizations, with a dark theme
 
 ## Domain Context
-- I work at a retail energy provider serving 50K customers across 5 regions
+- I work at a retail energy provider serving 50K customers across 6 Australian states
 - Peak hours are 2pm-7pm weekdays. Off-peak is all other times.
 - TOU = Time of Use rate plan. EV = Electric Vehicle rate plan.
 - Our fiscal year starts April 1.
@@ -61,7 +61,7 @@ Show me the monthly consumption trend for commercial customers
 - Code should use **PySpark** (not pandas) for data processing
 - Tables should reference `main.sourabh_energy_workshop`
 - Visualizations should use **Plotly with a dark theme**
-- Monetary values formatted as USD with 2 decimal places
+- Monetary values formatted as AUD with 2 decimal places
 - kWh used consistently as the unit label
 
 ### Key Concepts
@@ -153,7 +153,7 @@ If you are an admin configuring workspace instructions, you might add:
 In Genie Code Agent, type:
 
 ```
-Calculate our Q1 reliability KPIs by region
+Calculate our Q1 reliability KPIs by state
 ```
 
 **Expected:** Genie Code should use the energy-analytics skill context to understand reliability KPIs (SAIDI, SAIFI, CAIDI) and query the appropriate tables.
@@ -187,7 +187,7 @@ For each skill below, **open the SKILL.md** and **run the test prompt** in Genie
 | 5 | **knowledge-assistant-creator** | `Create a Knowledge Assistant for our rate schedule docs` |
 | 6 | **ai-functions-energy** | `Forecast next week's energy demand` or `Classify these customer complaints` |
 | 7 | **energy-analytics** | `Calculate our Q1 reliability KPIs` |
-| 8 | **regulatory-compliance** | `Check if our metrics meet NERC standards` |
+| 8 | **regulatory-compliance** | `Check if our metrics meet AEMO/AER standards` |
 | 9 | **carbon-reporting** | `Calculate our Scope 2 emissions` |
 | 10 | **customer-communications** | `Generate rate change notices for residential customers` |
 
@@ -242,7 +242,7 @@ For each skill below, **open the SKILL.md** and **run the test prompt** in Genie
 2. Find where sample questions or suggested prompts are defined
 3. Add three energy-specific questions, e.g.:
    ```markdown
-   - "What was our peak demand last month by region?"
+   - "What was our peak demand last month by state?"
    - "Which customers have the highest demand response participation?"
    - "Show me outage duration by cause code"
    ```

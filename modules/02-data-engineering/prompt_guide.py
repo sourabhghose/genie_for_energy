@@ -36,7 +36,7 @@
 # MAGIC
 # MAGIC Silver tables: Clean and deduplicate each bronze table. Handle nulls, standardize date formats, and remove duplicates.
 # MAGIC
-# MAGIC Gold tables: Create gold_customer_summary (aggregate consumption by customer), gold_daily_consumption (daily totals), and gold_outage_summary (outage stats by region).
+# MAGIC Gold tables: Create gold_customer_summary (aggregate consumption by customer), gold_daily_consumption (daily totals), and gold_outage_summary (outage stats by state).
 # MAGIC ```
 # MAGIC
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-NERC reliability standards compliance check for main.sourabh_energy_workshop.
+AEMO/AER reliability standards compliance check for main.sourabh_energy_workshop.
 Validates SAIDI/SAIFI thresholds, major event detection, and outage duration reporting.
 """
 
@@ -30,14 +30,14 @@ def check_saidi_saifi(spark):
         F.col("outage_start") >= F.date_sub(F.current_date(), LOOKBACK_DAYS)
     ).filter(F.col("outage_type") == "unplanned")
 
-    cust_counts = customers.groupBy("region").agg(
+    cust_counts = customers.groupBy("state").agg(
         F.countDistinct("customer_id").alias("total_customers")
     )
 
-    agg = df.groupBy("region").agg(
+    agg = df.groupBy("state").agg(
         F.sum("customer_minutes_interrupted").alias("total_cm"),
         F.count("*").alias("interruptions"),
-    ).join(cust_counts, "region")
+    ).join(cust_counts, "state")
 
     result = agg.withColumn(
         "saidi",
@@ -52,7 +52,7 @@ def check_saidi_saifi(spark):
         "saifi_compliant",
         F.when(F.col("saifi").isNull(), True).otherwise(F.col("saifi") <= SAIFI_THRESHOLD),
     ).select(
-        "region", "saidi", "saifi", "saidi_compliant", "saifi_compliant"
+        "state", "saidi", "saifi", "saidi_compliant", "saifi_compliant"
     )
 
     return result
@@ -71,16 +71,16 @@ def check_major_events(spark):
         F.col("outage_end").cast("long") / 60 - F.col("outage_start").cast("long") / 60,
     )
 
-    by_date_region = duration.groupBy(
+    by_date_state = duration.groupBy(
         F.to_date("outage_start").alias("event_date"),
-        "region",
+        "state",
     ).agg(
         F.sum("customer_minutes_interrupted").alias("total_cm"),
         F.countDistinct("customer_id").alias("affected_customers"),
         F.avg("duration_min").alias("avg_duration_min"),
     )
 
-    major = by_date_region.filter(
+    major = by_date_state.filter(
         (F.col("avg_duration_min") > MAJOR_EVENT_DURATION_MIN)
         | (F.col("affected_customers") > MAJOR_EVENT_CUSTOMERS)
     ).withColumn("flag", F.lit("MAJOR_EVENT_CANDIDATE"))

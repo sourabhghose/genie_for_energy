@@ -129,7 +129,7 @@ print(avg)
 ### /findTables
 
 > **Step 11:** Use `/findTables` to discover tables.  
-> **Action:** In Genie Code, type `/findTables consumption by region` and press Enter.  
+> **Action:** In Genie Code, type `/findTables consumption by state` and press Enter.  
 > **What you'll see:** Genie Code searches Unity Catalog metadata and returns relevant tables (e.g., `raw_meter_readings`, `raw_customers`, `raw_billing`).  
 > **Key concept:** `/findTables` finds tables by natural language. Mention "features" or "feature tables" to search for feature store assets.
 
@@ -191,7 +191,7 @@ df = spark.read.table("main.sourabh_energy_workshop.
 > **Action:** In a new cell, type this comment:
 
 ```python
-# join customers with billing and calculate total revenue per region
+# join customers with billing and calculate total revenue per state
 ```
 
 > Press **Enter**.  
@@ -228,7 +228,7 @@ df = spark.read.table("main.sourabh_energy_workshop.
 > **Action:** In the left sidebar, open **Catalog** (or **Data**). Navigate to **main** → **sourabh_energy_workshop** → **raw_customers**. Look for a natural language filter or search box. Type:
 
 ```
-Show me commercial customers in the Northeast region with solar panels
+Show me commercial customers in NSW with solar panels
 ```
 
 > **What you'll see:** The Catalog Explorer filters or queries the table to show matching rows.  
@@ -278,7 +278,7 @@ The `01_energy_data_explorer` notebook has **3 intentional bugs**. Your job is t
 > **Action:** Run a cell that displays a table (e.g., `customers_billing_df.display()` or a billing query). In the **output table**, look for a **Filter** icon. Click it. In the filter prompt, type:
 
 ```
-Show me only delinquent commercial customers with balance over $500
+Show me only delinquent commercial customers with balance over AUD 500
 ```
 
 > **What you'll see:** The table filters to show only rows matching that criteria.  
@@ -299,7 +299,7 @@ Complete these **4 tasks** independently using what you learned. Use Genie Code 
 
 ### Task 2: Generate from Comment
 
-1. In a new cell, type: `# Top 5 regions by total outage duration`
+1. In a new cell, type: `# Top 6 states by total outage duration`
 2. Press Enter and let Genie Code generate the code (or use Cmd+I).
 3. Run the cell and verify the output.
 
@@ -309,7 +309,7 @@ Complete these **4 tasks** independently using what you learned. Use Genie Code 
 
 ```python
 df = spark.table("main.sourabh_energy_workshop.raw_weather")
-df = df.filter(F.col("temp_high") > 90)
+df = df.filter(F.col("temp_high_c") > 38)
 df.display()
 ```
 

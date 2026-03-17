@@ -117,11 +117,11 @@ UNION ALL
 SELECT 'raw_demand_response', COUNT(*) FROM main.sourabh_energy_workshop.raw_demand_response;
 ```
 
-> **What you'll see:** Seven tables listed, with row counts approximately: 50K (customers), ~10.7M (meter readings), ~600K (billing), ~5K (outages), ~1.8K (weather), ~2K (equipment), ~20K (demand response).  
+> **What you'll see:** Seven tables listed, with row counts approximately: 50K (customers), ~10.7M (meter readings), ~600K (billing), ~5K (outages), ~2.2K (weather), ~2K (equipment), ~20K (demand response).  
 > **Key concept:** Unity Catalog tables live in `catalog.schema.table`. Verifying counts ensures the workshop data is ready.
 
 ![Catalog Tables](../images/03-catalog-tables.png)
-*All 7 energy tables in Unity Catalog — from 10.7M meter readings down to 1,825 weather records.*
+*All 7 energy tables in Unity Catalog — from 10.7M meter readings down to 2,190 weather records.*
 
 ---
 
