@@ -72,7 +72,7 @@ FROM main.sourabh_energy_workshop.raw_bill_text;
 
 ```sql
 SELECT ai_query(
-  'databricks-meta-llama-3-3-70b-instruct',
+  'databricks-claude-sonnet-4-5',
   'Summarize the top 3 drivers of high usage in NSW based on: ' || summary_text,
   responseFormat => 'STRUCT<drivers: ARRAY<STRING>, recommendation: STRING>'
 ) AS analysis
@@ -96,7 +96,7 @@ WITH parsed AS (
 SELECT
   path,
   ai_query(
-    'databricks-meta-llama-3-3-70b-instruct',
+    'databricks-claude-sonnet-4-5',
     CONCAT('Extract rate changes, effective date, and affected states from: ',
            doc:document:elements[0]:content::STRING),
     responseFormat => 'STRUCT<rate_changes: STRING, effective_date: STRING, states: ARRAY<STRING>>'

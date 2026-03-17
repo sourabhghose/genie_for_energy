@@ -114,7 +114,7 @@ FROM main.sourabh_energy_workshop.contracts;
 
 ```sql
 SELECT ai_query(
-  'databricks-meta-llama-3-3-70b-instruct',
+  'databricks-claude-sonnet-4-5',
   CONCAT('From this energy summary, extract key metrics: ', summary_text),
   responseFormat => 'STRUCT<peak_usage: DOUBLE, avg_rate: DOUBLE, recommendation: STRING>'
 ) AS analysis
@@ -132,7 +132,7 @@ FROM (
   SELECT
     id,
     ai_query(
-      'databricks-meta-llama-3-3-70b-instruct',
+      'databricks-claude-sonnet-4-5',
       question,
       failOnError => false
     ) AS result
@@ -175,7 +175,7 @@ WITH parsed AS (
 SELECT
   path,
   ai_query(
-    'databricks-meta-llama-3-3-70b-instruct',
+    'databricks-claude-sonnet-4-5',
     CONCAT('Extract: rate_change_pct, effective_date, affected_states. Text: ',
            doc:document:elements[0]:content::STRING),
     responseFormat => 'STRUCT<rate_change_pct: DOUBLE, effective_date: STRING, affected_states: ARRAY<STRING>>'

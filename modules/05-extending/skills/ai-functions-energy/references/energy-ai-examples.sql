@@ -56,7 +56,7 @@ LIMIT 50;
 SELECT
   state,
   ai_query(
-    'databricks-meta-llama-3-3-70b-instruct',
+    'databricks-claude-sonnet-4-5',
     CONCAT(
       'Summarize in one sentence the key insight from this energy data: ',
       'State: ', state, ', Avg usage: ', CAST(avg_kwh AS STRING), ' kWh, Trend: ', trend
@@ -86,7 +86,7 @@ parsed AS (
 SELECT
   path,
   ai_query(
-    'databricks-meta-llama-3-3-70b-instruct',
+    'databricks-claude-sonnet-4-5',
     CONCAT(
       'Extract from this regulatory filing: rate_change_pct (number), effective_date (YYYY-MM-DD), affected_states (comma-separated). Text: ',
       doc:document:elements[0]:content::STRING
