@@ -326,12 +326,11 @@ check if there's a backup, and propose a staged approach that I can review?
 ```sql
 SELECT
   event_time,
-  user_id,
+  initiated_by,
   workspace_id,
-  session_id,
-  event_type,
-  source_id,
-  source_name
+  event_id,
+  event_date,
+  user_agent
 FROM system.access.assistant_events
 WHERE event_time >= DATEADD(HOUR, -2, CURRENT_TIMESTAMP())
 ORDER BY event_time DESC
@@ -344,11 +343,11 @@ LIMIT 50;
 | Captured | Not captured |
 |---|---|
 | event_time | Prompt text |
-| user_id | Response content |
+| initiated_by | Response content |
 | workspace_id | Code that was accepted |
-| session_id | Whether suggestions were accepted |
-| event_type | Productivity impact |
-| source (notebook/dashboard/etc.) | |
+| event_id | Whether suggestions were accepted |
+| event_date | Productivity impact |
+| user_agent | |
 
 > 📸 **SCREENSHOT NEEDED:** Query result showing assistant_events rows with event types. Caption: *"system.access.assistant_events — who used Genie Code, when, and from where. Not what they asked."*
 
