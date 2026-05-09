@@ -459,6 +459,8 @@ There is no native "project" concept in Genie Code that groups multiple reposito
 
 1. Set up the scenario: imagine the SmartGrid platform has two repos — `genie_for_energy` (data pipelines) and a hypothetical `smartgrid-api` (serving layer). The silver tables produced by the pipeline are consumed by the API.
 
+> **Real-world setup note:** In a real deployment, you would connect both repos via Databricks Repos — check out `genie_for_energy` and `smartgrid-api` under your user path (e.g., `/Users/[your.email@databricks.com]/`), then open a Genie Code session with both folders in context. For this exercise, `smartgrid-api` is hypothetical — Genie Code will reason about it based on your session prompt and whatever lineage it can find, even without the repo present.
+
 2. Open a Genie Code session and explicitly declare multi-repo read scope:
 
 ```
@@ -472,6 +474,8 @@ Do not propose changes to smartgrid-api in this session.
 Task: The silver_meter_readings table schema has changed — a column was renamed.
 Help me understand what the impact is on the smartgrid-api consumers before I make the change.
 ```
+
+> **Expected behavior:** Since `smartgrid-api` does not exist in this workspace, Genie Code will analyze what it can find — Unity Catalog lineage, existing queries, and the genie_for_energy codebase — and reason about hypothetical downstream impact. This is still a useful exercise: it demonstrates the read-broadly-write-narrowly pattern and the kind of impact analysis output you would get in a real multi-repo setup.
 
 3. Observe the response — the assistant should explore the dependency before proposing anything, and should not generate write operations against the second repo
 
