@@ -361,7 +361,7 @@ LIMIT 50;
 
 **Steps:**
 
-1. Navigate to **Settings → Usage** in your Databricks workspace
+1. Navigate to the **Account Console** (top-right menu → Manage Account, or go directly to `accounts.cloud.databricks.com`) → **Usage**
 2. Filter by the last 7 days and look for compute triggered by Genie Code sessions (cluster starts, serverless SQL usage, warehouse queries)
 3. Note that Genie Code itself appears at no additional DBU cost — the charges are from compute the assistant triggered
 4. Review the available controls:
