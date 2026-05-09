@@ -114,25 +114,23 @@ Can you check what other notebooks I have in my workspace for similar data pipel
 
 **Steps:**
 
-1. In your local clone of `genie_for_energy`, create a file at the repo root named `AGENTS.md`
-2. Paste the content from `assets/AGENTS.md` (see Section G / copy-paste assets)
-3. Commit and push to a feature branch (do not push to main without review):
+1. Go to `/Users/[your.email@databricks.com]/module08-setup/genie_for_energy` in the Repos browser
+2. Click the branch name at the top — it currently shows **main**
+3. Create a new branch named `guardrails/add-agents-md`
+4. Create a new file at the repo root named `AGENTS.md` and paste the content from `modules/08-guardrails/assets/AGENTS.md` in the same repo
+5. Click the branch name again — the Git dialog opens
+6. Check the checkbox next to `AGENTS.md`
+7. Type the commit message: `chore: add AGENTS.md with safety constraints`
+8. Click **Commit & Push**
 
-```bash
-git checkout -b guardrails/add-agents-md
-git add AGENTS.md
-git commit -m "chore: add AGENTS.md with safety constraints for AI-assisted development"
-git push origin guardrails/add-agents-md
-```
-
-4. Open a Genie Code session in this repo
-5. Ask:
+9. Open a Genie Code session in this repo
+10. Ask:
 
 ```
 What constraints apply to this repository for AI-assisted development?
 ```
 
-6. Confirm the assistant reads and acknowledges the AGENTS.md content
+11. Confirm the assistant reads and acknowledges the AGENTS.md content
 
 > 📸 **SCREENSHOT NEEDED:** Genie Code response summarizing the AGENTS.md constraints. Caption: *"AGENTS.md is loaded automatically when present — repo-local context without any configuration."*
 
