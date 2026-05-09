@@ -362,8 +362,8 @@ LIMIT 50;
 **Steps:**
 
 1. Navigate to the **Account Console** (top-right menu → Manage Account, or go directly to `accounts.cloud.databricks.com`) → **Usage**
-2. Filter by the last 7 days and look for compute triggered by Genie Code sessions (cluster starts, serverless SQL usage, warehouse queries)
-3. Note that Genie Code itself appears at no additional DBU cost — the charges are from compute the assistant triggered
+2. Browse the overall DBU consumption by SKU — you will see All-Purpose Compute, SQL, Jobs, etc.
+3. Notice there is **no Genie Code line item** — you cannot isolate which compute was triggered by a Genie Code session vs. a human running a notebook manually. This is the visibility gap.
 4. Review the available controls:
 
 | Control | Location | What it does |
