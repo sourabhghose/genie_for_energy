@@ -411,6 +411,83 @@ Discuss each item:
 
 ---
 
+### Exercise C-11: Multi-repo workflows — productive patterns and guardrails
+
+**Goal:** Understand how to work effectively across multiple repositories in a single project, what Genie Code supports today, and how to reduce cross-repo confusion.
+
+**Product reality to establish first:**
+
+There is no native "project" concept in Genie Code that groups multiple repositories. Genie Code is repo-oriented — AGENTS.md is per-repo, instructions are per-user or per-workspace, and context defaults to whatever is in scope in the current session. This is the starting point, not the blocker. The patterns below make multi-repo work practical.
+
+**When multi-repo is appropriate vs. when to stay single-repo:**
+
+| Situation | Recommended approach |
+|---|---|
+| Exploring or understanding code across repos | Multi-repo session with read-only scope |
+| Making changes in one repo that depend on another | Single-repo write scope; read-only reference to the other |
+| Refactoring that touches multiple repos | Separate focused sessions per repo, coordinated via PR |
+| Debugging a failure that crosses a repo boundary | Multi-repo read to diagnose; single-repo write to fix |
+| Building a new feature that spans repos | Define contracts first; implement repo-by-repo |
+
+**Steps:**
+
+1. Set up the scenario: imagine the SmartGrid platform has two repos — `genie_for_energy` (data pipelines) and a hypothetical `smartgrid-api` (serving layer). The silver tables produced by the pipeline are consumed by the API.
+
+2. Open a Genie Code session and explicitly declare multi-repo read scope:
+
+```
+For this session I am working across two repositories:
+- genie_for_energy (main branch): source of truth for pipeline logic and silver tables
+- smartgrid-api (main branch): consumer of the silver tables
+
+Read access to both is fine. Write access is restricted to genie_for_energy only.
+Do not propose changes to smartgrid-api in this session.
+
+Task: The silver_meter_readings table schema has changed — a column was renamed.
+Help me understand what the impact is on the smartgrid-api consumers before I make the change.
+```
+
+3. Observe the response — the assistant should explore the dependency before proposing anything, and should not generate write operations against the second repo
+
+4. Now simulate the single-repo write pattern:
+
+```
+Now I want to make the schema change in genie_for_energy only.
+Show me the change as a diff — do not execute.
+Note what the smartgrid-api team will need to update separately.
+```
+
+5. Review the diff and the callout for the downstream team
+
+> 📸 **SCREENSHOT NEEDED:** Genie Code response showing multi-repo dependency analysis followed by a single-repo scoped diff. Caption: *"Read across repos to understand impact. Write to one repo at a time."*
+
+**AGENTS.md pattern for multi-repo projects:**
+
+Each repo needs its own AGENTS.md. The key addition for multi-repo environments is an explicit declaration of dependencies and who owns what:
+
+```markdown
+## Repository relationships
+
+This repo (genie_for_energy) is the upstream data provider.
+Downstream consumers:
+- smartgrid-api: reads from silver_* tables — coordinate schema changes with that team
+- smartgrid-dashboards: reads from gold_* tables — notify before any gold schema change
+
+Do not modify contracts (table schemas, column names) without first checking
+what depends on them and coordinating with downstream repo owners.
+```
+
+6. Add this relationships section to the AGENTS.md you created in Exercise C-2
+
+**What to discuss:**
+
+- There is no automatic cross-repo AGENTS.md inheritance — each repo's file applies only in that repo's context
+- The multi-repo pattern works best as: **read broadly, write narrowly** — use Genie Code to understand the full system, then make changes in one repo at a time
+- Git PRs and team communication remain the coordination mechanism across repos — Genie Code assists within a repo, not across team boundaries
+- For regulated environments: if repos contain data from different classification levels, keep sessions strictly scoped and do not mix high and low sensitivity context in a single session
+
+---
+
 ## D. Failure Injection Scenarios
 
 In these exercises, participants deliberately test guardrail behavior. The goal is to understand what Genie Code will and won't do — and what the actual safety controls are.
@@ -571,6 +648,12 @@ Use these in discovery calls, security reviews, and post-demo Q&A.
 
 ---
 
+### "Can Genie Code work across multiple repositories sharing a single project?"
+
+> Yes — Genie Code can reference multiple repositories in a single session. There is no native "project" concept that groups repos together, but the practical pattern works well: open the session with an explicit declaration of which repos are in scope, use read access across all of them to understand dependencies and impact, then restrict write operations to one repo at a time. Each repository should have its own AGENTS.md that declares its purpose and its relationships to upstream and downstream repos — this gives the assistant the context it needs to reason about cross-repo dependencies without needing a centralized project config. The key discipline is: read broadly to understand, write narrowly to act.
+
+---
+
 ### "What if a user accidentally wipes data?"
 
 > Genie Code executes with the user's own identity and permissions — the same permissions they have in every other Databricks tool. If a user has `DROP TABLE` on a catalog, a prompt can trigger it. The protection is the same as everywhere else: least-privilege permissions, Unity Catalog grants, and backup / time-travel on Delta tables. Genie Code adds a human review gate before any execution — but that gate is only as strong as the user's habit of actually reviewing the diff. We recommend pairing permission controls with workspace instructions that prompt caution on destructive operations.
@@ -609,7 +692,7 @@ Use these in discovery calls, security reviews, and post-demo Q&A.
 | **Workspace instructions** | Yes — set by workspace admin, applies to all users | — | Standardize across team; include data classification rules, approved tools, review requirements | Exercise C-3 |
 | **Account-level instructions** | — | Not available. Single policy across all workspaces. | Use admin runbook to standardize workspace instructions across workspaces | Flagged as gap in E. talking points |
 | **AGENTS.md / CLAUDE.md** | Yes — file in repo root, read automatically when present | — | Add to every repository; include repo purpose, prohibited actions, required review steps | Exercise C-2, assets/AGENTS.md |
-| **Multi-repo context** | Yes — Genie Code can reference multiple repos | Repo-specific guidance is not enforced across repos by default | Scope each session explicitly to one repo; use AGENTS.md per repo | Exercise C-1, C-5 |
+| **Multi-repo context** | Yes — Genie Code can reference multiple repos in one session | No native project concept grouping repos; no cross-repo AGENTS.md inheritance | Read across repos to understand dependencies; write to one repo at a time; AGENTS.md per repo should declare upstream/downstream relationships | Exercise C-1, C-11 |
 | **Private repo access** | Yes — via Repos integration and MCP GitHub | — | Use Repos permissions to control who can sync which repos | Base lab Module 05 |
 | **Destructive action prevention** | Partial — human review gate before execution | Automatic refusal of destructive actions | IAM least privilege + workspace instruction warning + AGENTS.md rule | Scenarios D-1 through D-3 |
 | **Approval workflow** | Yes — all executions require user approval | No PR-style approval for multi-step agent actions | Treat every diff as a gate; use operational checklist before approving | Exercise C-5, C-6 |

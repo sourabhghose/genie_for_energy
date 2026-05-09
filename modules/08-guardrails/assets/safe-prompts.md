@@ -111,7 +111,38 @@ If the fix requires changes to more than one file, list all files first.
 
 ---
 
-### 6. Safe session opener (scope statement)
+### 6. Safe multi-repo session (read broadly, write narrowly)
+
+```
+For this session I am working across two repositories:
+- [repo-1] ([branch]): [purpose — e.g., upstream data pipeline]
+- [repo-2] ([branch]): [purpose — e.g., downstream API / dashboard / ML model]
+
+Read access: both repositories
+Write access: [repo-1] only — do not propose changes to [repo-2] in this session
+
+Task: [describe the cross-repo question or impact analysis]
+
+Before proposing any changes:
+1. Read both repos to understand the dependency
+2. Identify what [repo-2] consumers will need to change as a result
+3. Propose changes to [repo-1] only, as a diff — do not execute
+4. Note explicitly what the [repo-2] team will need to handle separately
+```
+
+**When to use this pattern:**
+- Schema changes in an upstream repo that affect downstream consumers
+- Debugging failures that cross a repo boundary
+- Understanding dependencies before starting a refactor
+
+**When NOT to use multi-repo sessions:**
+- When making writes — stay single-repo for any change session
+- When repos have different data classification levels — do not mix
+- When you are unsure of the full repo inventory — scope down first
+
+---
+
+### 7. Safe session opener (scope statement)
 
 ```
 For this session:
