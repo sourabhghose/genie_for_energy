@@ -189,9 +189,38 @@ The assistant should ask about data classification before proceeding and warn ag
 
 **What to discuss:**
 
-The FE workspace policy already exists as a governance document. This exercise demonstrates the gap between a policy existing as a document and being operationally embedded in the tools people use. Before: the policy existed in Confluence. After: every Genie Code session is nudged toward compliance automatically.
+**Who actually enforces these cleanup rules?**
 
-Workspace instructions are set by admins and apply to all users — they cannot be disabled at the user level. They only **guide** behavior. The `RemoveAfter` tag enforcement, PII controls, and compute policies are enforced by separate automated systems (FE Infra automation, Unity Catalog permissions). The instructions are a reminder layer on top of existing enforcement — not a replacement for it.
+A common question when participants see the resource lifecycle table: *"If Genie Code workspace instructions say catalogs are deleted after 14 days — does Genie Code enforce that?"*
+
+The answer is no. In the `e2-demo-field-eng` workspace, the cleanup is enforced by the **FE Infrastructure team's own automated scripts and the FE Infra Bot** — a custom internal automation that runs on a schedule, checks resource tags, sends Slack and email warnings, and deletes resources when the policy is met. It has nothing to do with Genie Code.
+
+For customer workspaces, **none of this automation exists by default**. There is no built-in Databricks platform feature that deletes catalogs after 14 days. If a customer wants equivalent lifecycle enforcement, they need to build it themselves — using Databricks Jobs, the REST API, or a third-party tool.
+
+**So what is the point of putting these rules in workspace instructions?**
+
+The value is not enforcement — it is **timing**. 
+
+A policy document fires when someone remembers to read it, which is almost never at the moment they are creating a resource in Genie Code. Workspace instructions fire *inside the tool, at the exact moment the user is about to take an action*.
+
+Without the instruction:
+> User: *"Create a catalog called my_analysis"*
+> Genie Code: *[creates the catalog, no further comment]*
+
+With the instruction:
+> User: *"Create a catalog called my_analysis"*
+> Genie Code: *"I'll create that catalog. Based on the workspace policy, you'll want to add a `RemoveAfter` tag or the FE Infra automation will delete it in 14 days. Want me to include the tag in the `CREATE CATALOG` statement?"*
+
+The instruction does not prevent deletion. It prevents the **surprise** — and prompts the correct behaviour at the moment it is relevant. This is the gap workspace instructions fill: **bridging policy-as-document to policy-as-practice**.
+
+| Instructions are useful for | Instructions are not useful for |
+|---|---|
+| Reminding users of lifecycle rules *when creating resources* | Enforcing deletion (that requires external automation) |
+| Prompting correct naming at the moment of creation | Preventing a determined user from ignoring the guidance |
+| Flagging PII rules *before* a data load, not after | Replacing the policy document itself |
+| Nudging toward shared compute when a session starts | Auditing what actions were actually taken |
+
+Workspace instructions are set by admins and apply to all users — they cannot be disabled at the user level. They only **guide** behavior. Enforcement requires separate mechanisms: FE Infra automation, Unity Catalog permissions, budget policies, and cluster policies.
 
 **Account-level note:** This instruction block applies to `e2-demo-field-eng` only. If a customer has 10 workspaces, they need to configure this 10 times. Account-level instructions — one configuration for all workspaces — are **not available today**.
 
