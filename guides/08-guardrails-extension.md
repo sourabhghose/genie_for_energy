@@ -275,7 +275,7 @@ where consumption_kwh is negative. Do not run it yet — show me the change firs
 
 > 📸 **SCREENSHOT NEEDED:** The diff view in Genie Code showing the proposed addition. Caption: *"Read the full diff before accepting — this is the review gate."*
 
-**What to discuss:** Use the operational checklist from `assets/operational-checklist.md` as a structured pre-approval review. This is especially important for pipeline changes that run on a schedule.
+**What to discuss:** The checklist in `assets/operational-checklist.md` is a training reference for building review habits — not something developers read in full for every change. Use it explicitly when onboarding new team members or before high-stakes operations (destructive queries, scheduled pipeline changes). For routine changes, the key habit is: **review the diff before accepting, not after.**
 
 ---
 
@@ -420,7 +420,7 @@ Use the Jira MCP tool to create a ticket for this data quality issue.
 
 **Steps:**
 
-Before executing any Genie Code workflow in a sensitive environment, walk through the checklist in `assets/operational-checklist.md`.
+Review the checklist in `assets/operational-checklist.md`. Use it as a training reference — go through it line by line here to build the habit, then apply it selectively for high-stakes operations in practice.
 
 Discuss each item:
 
