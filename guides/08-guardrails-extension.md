@@ -516,6 +516,24 @@ what depends on them and coordinating with downstream repo owners.
 - Git PRs and team communication remain the coordination mechanism across repos — Genie Code assists within a repo, not across team boundaries
 - For regulated environments: if repos contain data from different classification levels, keep sessions strictly scoped and do not mix high and low sensitivity context in a single session
 
+**VS Code + Databricks Repos: the sync problem**
+
+If developers use VS Code locally alongside Databricks Repos in the workspace, these are two separate git working copies pointing at the same remote — changes in one do not automatically appear in the other. Each side requires its own commit and push. Common failure modes:
+
+- Make a change in VS Code → forget to push → open Genie Code in workspace → working on stale code
+- Make a change via Genie Code in the workspace → forget to push → pull in VS Code → change is missing
+
+**Recommended pattern:** pick one environment as primary and treat the other as execution-only:
+
+| Primary environment | Use Databricks Repos for |
+|---|---|
+| VS Code (local dev, tests, linting) | Running notebooks and validating against real cluster/data |
+| Databricks Repos (notebook-first teams) | VS Code for local tooling only |
+
+Always push to GitHub before switching environments. There is no live sync between the two — it is manual git operations on both sides.
+
+**Guardrails implication:** Workspace instructions and Genie Code MCP configuration only apply when working inside the Databricks workspace browser. When a developer works in VS Code with a different AI tool (e.g. Copilot), those guardrails do not apply. Unity Catalog permissions and branch protection are the controls that hold in both environments.
+
 ---
 
 ## D. Failure Injection Scenarios
