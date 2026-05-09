@@ -69,8 +69,20 @@ genie_for_energy/
 │   │       └── customer-communications/ # Tier 1: Customer templates
 │   ├── 06-genai-observability/
 │   │   └── prompt_guide.py            # MLflow trace analysis prompts
-│   └── 07-measuring-impact/
-│       └── system_table_queries.py    # System table queries notebook
+│   ├── 07-measuring-impact/
+│   │   └── system_table_queries.py    # System table queries notebook
+│   └── 08-guardrails/
+│       ├── assets/
+│       │   ├── AGENTS.md              # Sample repo-local AI agent instructions
+│       │   ├── CLAUDE.md              # Claude Code equivalent of AGENTS.md
+│       │   ├── workspace-instructions.md  # FE workspace + SmartGrid instruction templates
+│       │   ├── safe-prompts.md        # Safe and risky prompt patterns with rewrites
+│       │   └── operational-checklist.md   # Pre-execution review checklist
+│       └── facilitator/
+│           ├── 10min-addon-flow.md    # Condensed 10-minute delivery guide
+│           ├── demo-narration-script.md   # Word-for-word narration script
+│           ├── one-page-takeaway.md   # Customer leave-behind
+│           └── minimum-safe-setup.md  # Production readiness checklist
 └── facilitator/                       # Facilitator resources (TBD)
 ```
 
@@ -89,6 +101,7 @@ Each module is independent and can be combined based on audience and time:
 | **5: Extending** | 75 min | All | Custom instructions, 10 Agent Skills, MCP integration |
 | **6: GenAI Observability** | 60 min | MLflow (Agent) | Trace analysis, evaluation, instrumentation |
 | **7: Impact** | 30 min | System Tables | Adoption metrics and impact dashboard |
+| **8: Guardrails** | 60–90 min | All | Enterprise governance, safe operating practices, failure injection scenarios |
 
 ## Suggested Workshop Combinations
 
@@ -100,6 +113,7 @@ Each module is independent and can be combined based on audience and time:
 | 3 hr | Energy Ops Focus | 0 + 1 (partial) + 2 + 4 (partial) + 5C |
 | 4 hr | Half-Day Extended | 0 + 1 + 2 + 3 + 4 (partial) |
 | Full day | Complete Workshop | All modules 0-7 |
+| Full day + | Enterprise / Regulated Industry | All modules 0-7 + 8 (Guardrails) |
 
 ## Synthetic Dataset
 
